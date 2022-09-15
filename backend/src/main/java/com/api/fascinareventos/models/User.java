@@ -24,7 +24,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false, length = 20, unique = true)
-    private String userName;
+    private String username;
     @Column(nullable = false)
     private String password;
     @Enumerated(EnumType.STRING)
@@ -33,31 +33,11 @@ public class User implements UserDetails {
     private Boolean enabled = true;
 
     public User(String userName, String password, UserRole userRole, Boolean locked, Boolean enabled) {
-        this.userName = userName;
+        this.username = userName;
         this.password = password;
         this.userRole = userRole;
         this.locked = locked;
         this.enabled = enabled;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     @Override
@@ -73,7 +53,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userName;
+        return username;
     }
 
     @Override

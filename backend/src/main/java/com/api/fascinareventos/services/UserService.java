@@ -4,8 +4,8 @@ import com.api.fascinareventos.models.User;
 import com.api.fascinareventos.repositories.UserRepository;
 import com.api.fascinareventos.services.exceptions.DatabaseException;
 import com.api.fascinareventos.services.exceptions.ResourceNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -18,20 +18,21 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class UserService implements UserDetailsService {
 
     private static final String USER_NOT_FOUND = "User not found.";
-
-    @Autowired
     private UserRepository repository;
 
     @Transactional
     public User insertUser(User user) {
+        if (repository.existsByUsername(user.getUsername())) {
+            throw new DatabaseException(HttpStatus.CONFLICT, "User already exists.");
+        }
         try {
             return repository.save(user);
         } catch (DataIntegrityViolationException e) {
-            DatabaseException.status = HttpStatus.CONFLICT;
-            throw new DatabaseException("Username already exists.");
+            throw new DatabaseException(e.getMessage());
         }
     }
 
@@ -73,10 +74,9 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) {
         try {
-            return repository.findByUserName(username);
+            return repository.findByUsername(username);
         }  catch (EmptyResultDataAccessException e) {
-            DatabaseException.status = HttpStatus.NOT_FOUND;
-            throw new DatabaseException(USER_NOT_FOUND);
+            throw new DatabaseException(HttpStatus.NOT_FOUND, USER_NOT_FOUND);
         }
     }
 }
