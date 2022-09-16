@@ -22,8 +22,8 @@ public class JWTAuthFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
 
-    @Value("${jwt.secret}")
-    public static String TOKEN_PWD;
+//    @Value("${jwt.secret}")
+    public static String TOKEN_PWD = "myScretPassword";
 
     public JWTAuthFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
@@ -35,7 +35,11 @@ public class JWTAuthFilter extends UsernamePasswordAuthenticationFilter {
         try {
             UserModel userModel = new ObjectMapper().readValue(request.getInputStream(), UserModel.class);
 
+            String token = JWT.create()
+                    .withSubject(userModel.getUsername())
+                    .sign(Algorithm.HMAC512(TOKEN_PWD));
 
+            System.out.println(token);
 
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     userModel.getUsername(),
@@ -52,8 +56,6 @@ public class JWTAuthFilter extends UsernamePasswordAuthenticationFilter {
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
         UserModel userModel = (UserModel) authResult.getPrincipal();
-
-        System.out.println("SUCESSO: " + userModel);
 
         String token = JWT.create()
                 .withSubject(userModel.getUsername())
