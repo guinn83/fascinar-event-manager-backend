@@ -4,12 +4,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
@@ -19,7 +20,10 @@ import java.util.Objects;
 @NoArgsConstructor
 @Entity
 @Table(name = "tb_user")
-public class User implements UserDetails {
+public class UserModel implements UserDetails, Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +37,7 @@ public class User implements UserDetails {
     private Boolean locked = false;
     private Boolean enabled = true;
 
-    public User(String userName, String password, UserRole userRole, Boolean locked, Boolean enabled) {
+    public UserModel(String userName, String password, UserRole userRole, Boolean locked, Boolean enabled) {
         this.username = userName;
         this.password = password;
         this.userRole = userRole;
@@ -81,8 +85,8 @@ public class User implements UserDetails {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        User user = (User) o;
-        return id != null && Objects.equals(id, user.id);
+        UserModel userModel = (UserModel) o;
+        return id != null && Objects.equals(id, userModel.id);
     }
 
     @Override
