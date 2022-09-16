@@ -73,10 +73,9 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        try {
-            return repository.findByUsername(username);
-        }  catch (EmptyResultDataAccessException e) {
-            throw new DatabaseException(HttpStatus.NOT_FOUND, USER_NOT_FOUND);
+        if (!repository.existsByUsername(username)) {
+            throw new DatabaseException(HttpStatus.NOT_FOUND, "User [" + username + "] not found");
         }
+        return repository.findByUsername(username);
     }
 }

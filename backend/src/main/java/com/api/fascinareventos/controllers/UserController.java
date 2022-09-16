@@ -2,7 +2,6 @@ package com.api.fascinareventos.controllers;
 
 import com.api.fascinareventos.models.User;
 import com.api.fascinareventos.services.UserService;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
