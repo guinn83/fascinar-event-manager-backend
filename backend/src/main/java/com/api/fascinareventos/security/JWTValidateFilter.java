@@ -27,7 +27,6 @@ public class JWTValidateFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain chain) throws IOException, ServletException {
-//        super.doFilterInternal(request, response, chain);
         String atribute = request.getHeader(HEADER_ATRIBUTE);
 
         if (atribute == null || !atribute.startsWith(ATRIBUTE_PREFIX)) {
@@ -36,6 +35,7 @@ public class JWTValidateFilter extends BasicAuthenticationFilter {
         }
 
         String token = atribute.replace(ATRIBUTE_PREFIX, "");
+
         UsernamePasswordAuthenticationToken authenticationToken = getAuthenticationToken(token);
 
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
@@ -52,6 +52,4 @@ public class JWTValidateFilter extends BasicAuthenticationFilter {
 
         return new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
     }
-
-
 }

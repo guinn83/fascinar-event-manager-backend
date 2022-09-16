@@ -16,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class JWTAuthFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -33,7 +34,13 @@ public class JWTAuthFilter extends UsernamePasswordAuthenticationFilter {
                                                 HttpServletResponse response) throws AuthenticationException {
         try {
             UserModel userModel = new ObjectMapper().readValue(request.getInputStream(), UserModel.class);
-            return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userModel.getUsername(), userModel.getPassword(), userModel.getAuthorities()));
+
+
+
+            return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    userModel.getUsername(),
+                    userModel.getPassword(),
+                    new ArrayList<>()));
         } catch (IOException e) {
             throw new RuntimeException("Fail to authenticate user", e);
         }
@@ -45,6 +52,9 @@ public class JWTAuthFilter extends UsernamePasswordAuthenticationFilter {
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
         UserModel userModel = (UserModel) authResult.getPrincipal();
+
+        System.out.println("SUCESSO: " + userModel);
+
         String token = JWT.create()
                 .withSubject(userModel.getUsername())
                 .sign(Algorithm.HMAC512(TOKEN_PWD));
