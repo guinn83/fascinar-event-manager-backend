@@ -25,6 +25,10 @@ public class UserService implements UserDetailsService {
         this.repository = repository;
     }
 
+    public UserDetails findByUsername(String username) {
+        return repository.findByUsername(username);
+    }
+
     @Transactional
     public UserModel insertUser(UserModel userModel) {
         if (repository.existsByUsername(userModel.getUsername())) {

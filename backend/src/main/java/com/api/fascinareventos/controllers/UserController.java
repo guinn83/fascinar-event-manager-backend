@@ -23,11 +23,6 @@ public class UserController {
     @Autowired
     private UserRepository repository;
 
-
-    @Value("${jwt.secret}")
-    private String teste;
-
-
     private static final String USER_NOT_FOUND = "User not found.";
 
     @PostMapping
@@ -39,7 +34,6 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<UserModel>> getAllUsers() {
-        System.out.println(teste);
         return ResponseEntity.ok().body(repository.findAll());
     }
 

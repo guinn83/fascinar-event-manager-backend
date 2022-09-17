@@ -40,8 +40,6 @@ public class JWTConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        System.out.println("JWTConfig: -" +  jwtProperties.getPrefix() + "-");
-
         http
                 .headers().frameOptions().disable().and()
                 .csrf().disable()

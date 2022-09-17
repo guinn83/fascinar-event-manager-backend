@@ -1,6 +1,7 @@
 package com.api.fascinareventos.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,6 +17,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "tb_user")
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 public class UserModel implements UserDetails, Serializable {
 
     @Serial
@@ -34,54 +39,11 @@ public class UserModel implements UserDetails, Serializable {
     private Boolean locked = false;
     private Boolean enabled = true;
 
-    public UserModel() {
-    }
-
-    public UserModel(String userName, String password, UserRole userRole, Boolean locked, Boolean enabled) {
-        this.username = userName;
-        this.password = password;
-        this.userRole = userRole;
-        this.locked = locked;
-        this.enabled = enabled;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setUsername(String username) {
+    public UserModel(String username, String password, UserRole userRole, Boolean locked, Boolean enabled) {
         this.username = username;
-    }
-
-    public void setPassword(String password) {
         this.password = password;
-    }
-
-    public UserRole getUserRole() {
-        return userRole;
-    }
-
-    public void setUserRole(UserRole userRole) {
         this.userRole = userRole;
-    }
-
-    public Boolean getLocked() {
-        return locked;
-    }
-
-    public void setLocked(Boolean locked) {
         this.locked = locked;
-    }
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
 

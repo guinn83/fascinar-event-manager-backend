@@ -9,7 +9,7 @@ spring:
     password:
     driverClassName: org.h2.Driver
   jpa:
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
@@ -19,3 +19,4 @@ jwt:
   header: Authorization
   secret: 7f3c0f02-4ee2-401f-ab26-0fa9aa991dd6
   expiration: 3600000
+  prefix: 'Bearer '
