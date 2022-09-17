@@ -1,0 +1,21 @@
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: true
+
+jwt:
+  header: Authorization
+  secret: 7f3c0f02-4ee2-401f-ab26-0fa9aa991dd6
+  expiration: 3600000

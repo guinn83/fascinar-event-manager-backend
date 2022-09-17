@@ -1,5 +1,6 @@
 package com.api.fascinareventos.security;
 
+import com.api.fascinareventos.config.JwtProperties;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,11 +17,15 @@ import java.util.ArrayList;
 
 public class JWTValidateFilter extends BasicAuthenticationFilter {
 
-    public static final String HEADER_ATRIBUTE = "Authorization";
-    public static final String ATRIBUTE_PREFIX = "Bearer ";
+    private final JwtProperties jwtProperties;
+    public static String HEADER_ATRIBUTE;
+    public static String ATRIBUTE_PREFIX;
 
-    public JWTValidateFilter(AuthenticationManager authenticationManager) {
+    public JWTValidateFilter(AuthenticationManager authenticationManager, JwtProperties jwtProperties) {
         super(authenticationManager);
+        this.jwtProperties = jwtProperties;
+        HEADER_ATRIBUTE = jwtProperties.getHeader();
+        ATRIBUTE_PREFIX = jwtProperties.getPrefix();
     }
 
     @Override

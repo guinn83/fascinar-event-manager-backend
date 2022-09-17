@@ -5,12 +5,11 @@ import com.api.fascinareventos.repositories.UserRepository;
 import com.api.fascinareventos.services.UserService;
 import com.api.fascinareventos.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.transaction.Transactional;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +23,11 @@ public class UserController {
     @Autowired
     private UserRepository repository;
 
+
+    @Value("${jwt.secret}")
+    private String teste;
+
+
     private static final String USER_NOT_FOUND = "User not found.";
 
     @PostMapping
@@ -35,6 +39,7 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<UserModel>> getAllUsers() {
+        System.out.println(teste);
         return ResponseEntity.ok().body(repository.findAll());
     }
 

@@ -4,7 +4,6 @@ import com.api.fascinareventos.models.UserModel;
 import com.api.fascinareventos.repositories.UserRepository;
 import com.api.fascinareventos.services.exceptions.DatabaseException;
 import com.api.fascinareventos.services.exceptions.ResourceNotFoundException;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -17,11 +16,14 @@ import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
 public class UserService implements UserDetailsService {
 
     private static final String USER_NOT_FOUND = "User not found.";
-    private UserRepository repository;
+    private final UserRepository repository;
+
+    public UserService(UserRepository repository) {
+        this.repository = repository;
+    }
 
     @Transactional
     public UserModel insertUser(UserModel userModel) {

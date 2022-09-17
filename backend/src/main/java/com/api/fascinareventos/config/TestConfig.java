@@ -19,6 +19,9 @@ public class TestConfig implements CommandLineRunner {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder encoder;
+    @Autowired
+    private JwtProperties jwtProperties;
+
 
     @Override
     public void run(String... args) throws Exception {

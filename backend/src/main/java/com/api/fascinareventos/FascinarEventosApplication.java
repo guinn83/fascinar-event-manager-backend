@@ -1,12 +1,17 @@
 package com.api.fascinareventos;
 
+import com.api.fascinareventos.config.JwtProperties;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
+@EnableConfigurationProperties(JwtProperties.class)
 public class FascinarEventosApplication {
 
 	public static void main(String[] args) {
@@ -14,7 +19,20 @@ public class FascinarEventosApplication {
 	}
 
 	@Bean
+	ApplicationRunner applicationRunner(JwtProperties jwtProperties) {
+		return args -> {
+//			System.out.println("Proterties: " + appProperties);
+		};
+	}
+
+	@Bean
 	public PasswordEncoder getPasswordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	@ConfigurationProperties(prefix = "jwt")
+	JwtProperties jwtProperties() {
+		return new JwtProperties();
 	}
 }
