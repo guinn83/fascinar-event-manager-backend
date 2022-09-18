@@ -17,10 +17,8 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "tb_user")
-@Getter
-@Setter
-@ToString
-@RequiredArgsConstructor
+@Data
+@NoArgsConstructor
 public class UserModel implements UserDetails, Serializable {
 
     @Serial

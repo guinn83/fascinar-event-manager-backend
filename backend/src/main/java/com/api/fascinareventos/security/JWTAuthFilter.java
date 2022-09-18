@@ -6,7 +6,7 @@ import com.api.fascinareventos.services.UserService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,18 +19,20 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class JWTAuthFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JwtProperties jwtProperties;
+    private ApplicationContext appContext;
 
-    public JWTAuthFilter(AuthenticationManager authenticationManager, JwtProperties jwtProperties) {
+    private final UserService userService;
+
+    public JWTAuthFilter(AuthenticationManager authenticationManager, JwtProperties jwtProperties, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtProperties = jwtProperties;
+        this.userService = userService;
     }
-
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
@@ -38,10 +40,14 @@ public class JWTAuthFilter extends UsernamePasswordAuthenticationFilter {
         try {
             UserModel userModel = new ObjectMapper().readValue(request.getInputStream(), UserModel.class);
 
+            UserDetails userDetails = userService.findByUsername(userModel.getUsername());
+//            System.out.println(userService.findByUsername(userModel.getUsername()));
+            System.out.println(userDetails.getAuthorities());
+
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     userModel.getUsername(),
                     userModel.getPassword(),
-                    new ArrayList<>()));
+                    userDetails.getAuthorities()));
         } catch (IOException e) {
             throw new RuntimeException("Fail to authenticate user", e);
         }
@@ -63,7 +69,4 @@ public class JWTAuthFilter extends UsernamePasswordAuthenticationFilter {
         response.getWriter().flush();
     }
 
-    public JwtProperties getJwtProperties() {
-        return jwtProperties;
-    }
 }

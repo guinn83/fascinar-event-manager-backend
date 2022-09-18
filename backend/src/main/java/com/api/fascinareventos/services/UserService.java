@@ -5,20 +5,21 @@ import com.api.fascinareventos.repositories.UserRepository;
 import com.api.fascinareventos.services.exceptions.DatabaseException;
 import com.api.fascinareventos.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService  {
 
     private static final String USER_NOT_FOUND = "User not found.";
+    @Autowired
     private final UserRepository repository;
 
     public UserService(UserRepository repository) {
@@ -62,13 +63,5 @@ public class UserService implements UserDetailsService {
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException(e.getMessage());
         }
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) {
-        if (!repository.existsByUsername(username)) {
-            throw new DatabaseException(HttpStatus.NOT_FOUND, "User [" + username + "] not found");
-        }
-        return repository.findByUsername(username);
     }
 }

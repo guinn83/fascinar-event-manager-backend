@@ -20,9 +20,14 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(
+        prePostEnabled = true,
+        securedEnabled = true,
+        jsr250Enabled = true)
 @Data
 @AllArgsConstructor
 public class JWTConfiguration {
@@ -31,6 +36,7 @@ public class JWTConfiguration {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private JwtProperties jwtProperties;
+    private JWTAuthEntryPoint authEntryPoint;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -46,11 +52,15 @@ public class JWTConfiguration {
                 .authorizeHttpRequests()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/api/v1/user/**").hasAnyAuthority("ADMIN")
                 .anyRequest()
                 .authenticated().and()
-                .addFilter(new JWTAuthFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)), jwtProperties))
-                .addFilter(new JWTValidateFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)), jwtProperties))
+                .addFilter(new JWTAuthFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)), jwtProperties, userService))
+                .addFilter(new JWTValidateFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)), jwtProperties, userService))
 //                .formLogin().and()
+                .httpBasic()
+                .authenticationEntryPoint(authEntryPoint)
+                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         return http.build();
@@ -60,7 +70,7 @@ public class JWTConfiguration {
     CorsConfigurationSource corsConfigurationSource() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
-//        configuration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE", "OPTIONS"));
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
