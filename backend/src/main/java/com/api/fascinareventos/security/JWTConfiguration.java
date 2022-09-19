@@ -11,6 +11,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,9 +25,11 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @EnableGlobalMethodSecurity(
         prePostEnabled = true,
-        securedEnabled = true)
+        securedEnabled = true,
+        jsr250Enabled = true)
 @Data
 @AllArgsConstructor
 public class JWTConfiguration {
@@ -51,7 +54,8 @@ public class JWTConfiguration {
                 .authorizeHttpRequests()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/api/v1/user/**").hasAnyAuthority("ADMIN")
+//                .antMatchers("/api/v1/user/**").hasAnyAuthority("ADMIN")
+                .antMatchers("/api/v1/**").permitAll()
                 .anyRequest()
                 .authenticated().and()
                 .addFilter(new JWTAuthFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)), jwtProperties, userService))

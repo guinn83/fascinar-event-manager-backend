@@ -6,12 +6,12 @@ import com.api.fascinareventos.services.UserService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -25,8 +25,6 @@ public class JWTAuthFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JwtProperties jwtProperties;
-    private ApplicationContext appContext;
-
     private final UserService userService;
 
     public JWTAuthFilter(AuthenticationManager authenticationManager, JwtProperties jwtProperties, UserService userService) {
@@ -42,13 +40,16 @@ public class JWTAuthFilter extends UsernamePasswordAuthenticationFilter {
             UserModel userModel = new ObjectMapper().readValue(request.getInputStream(), UserModel.class);
 
             UserDetails userDetails = userService.findByUsername(userModel.getUsername());
+            if (userDetails == null) {
+                throw new UsernameNotFoundException("Username not found.");
+            }
 
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     userModel.getUsername(),
                     userModel.getPassword(),
                     userDetails.getAuthorities()));
         } catch (IOException e) {
-            throw new RuntimeException("Fail to authenticate user", e);
+            throw new RuntimeException("Fail to authenticate user " + request.getUserPrincipal(), e);
         }
     }
 
@@ -61,10 +62,11 @@ public class JWTAuthFilter extends UsernamePasswordAuthenticationFilter {
 
         String token = JWT.create()
                 .withSubject(userModel.getUsername())
-//                .withExpiresAt(new Date(System.currentTimeMillis() + jwtProperties.getExpiration()))
+                .withExpiresAt(new Date(System.currentTimeMillis() + jwtProperties.getExpiration()))
                 .sign(Algorithm.HMAC512(jwtProperties.getSecret()));
 
-        response.getWriter().write(token);
+        response.addHeader(jwtProperties.getHeader(), token);
+        response.getWriter().write("{\"Authorization\": \"" + token + "\"}");
         response.getWriter().flush();
     }
 

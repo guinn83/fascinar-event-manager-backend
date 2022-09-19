@@ -10,17 +10,21 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service("userService")
-public class UserService  {
+public class UserService {
 
     private static final String USER_NOT_FOUND = "User not found.";
     @Autowired
     private final UserRepository repository;
+    @Autowired
+    private BCryptPasswordEncoder encoder;
 
     public UserService(UserRepository repository) {
         this.repository = repository;
@@ -36,6 +40,7 @@ public class UserService  {
             throw new DatabaseException(HttpStatus.CONFLICT, "User already exists.");
         }
         try {
+            userModel.setPassword(encoder.encode(userModel.getPassword()));
             return repository.save(userModel);
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException(e.getMessage());
