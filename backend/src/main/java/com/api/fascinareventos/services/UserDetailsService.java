@@ -1,4 +1,4 @@
-package com.api.fascinareventos.data;
+package com.api.fascinareventos.services;
 
 import com.api.fascinareventos.repositories.UserRepository;
 import com.api.fascinareventos.services.exceptions.DatabaseException;
@@ -15,9 +15,10 @@ public class UserDetailsService implements org.springframework.security.core.use
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        if (!repository.existsByUsername(username)) {
+        UserDetails userDetails = repository.findByUsername(username);
+        if (userDetails == null) {
             throw new DatabaseException(HttpStatus.NOT_FOUND, "User [" + username + "] not found");
         }
-        return repository.findByUsername(username);
+        return userDetails;
     }
 }

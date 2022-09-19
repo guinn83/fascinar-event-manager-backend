@@ -26,8 +26,7 @@ import java.util.Arrays;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
         prePostEnabled = true,
-        securedEnabled = true,
-        jsr250Enabled = true)
+        securedEnabled = true)
 @Data
 @AllArgsConstructor
 public class JWTConfiguration {

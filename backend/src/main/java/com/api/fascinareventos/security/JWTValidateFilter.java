@@ -4,6 +4,8 @@ import com.api.fascinareventos.config.JwtProperties;
 import com.api.fascinareventos.services.UserService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeansException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -52,7 +54,7 @@ public class JWTValidateFilter extends BasicAuthenticationFilter {
 
 //        request.authenticate(response);
   /*      System.out.println(authenticationToken != null ? authenticationToken.getAuthorities() : null);
-        System.out.println("Authenticado: " + request.authenticate(response));
+        System.out.println("Autenticado: " + request.authenticate(response));
         assert authenticationToken != null;
         System.out.println("toString: " + authenticationToken.getAuthorities().toString());
         System.out.println("toString: " + authenticationToken.getAuthorities().stream().findFirst().get().getAuthority());
@@ -63,11 +65,12 @@ public class JWTValidateFilter extends BasicAuthenticationFilter {
         GenericPrincipal genericPrincipal = (GenericPrincipal) userPrincipal;
         String[] roles = genericPrincipal.getRoles();
         System.out.println("Roles: " + Arrays.toString(roles));*/
-
-        chain.doFilter(request, response);
 //            PrintWriter writer = response.getWriter();
 //            writer.println("HTTP Status 401 - " + e.getMessage());
+        chain.doFilter(request, response);
     }
+
+
 
     private UsernamePasswordAuthenticationToken getAuthenticationToken(String token) {
         String username = JWT.require(Algorithm.HMAC512(jwtProperties.getSecret()))

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
-@Service
+@Service("userService")
 public class UserService  {
 
     private static final String USER_NOT_FOUND = "User not found.";
