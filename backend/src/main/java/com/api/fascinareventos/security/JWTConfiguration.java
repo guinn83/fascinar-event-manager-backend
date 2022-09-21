@@ -64,6 +64,7 @@ public class JWTConfiguration {
                 .httpBasic()
                 .authenticationEntryPoint(authEntryPoint)
                 .and()
+                .exceptionHandling().accessDeniedPage("/api/v1/acesso-negado").and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         return http.build();

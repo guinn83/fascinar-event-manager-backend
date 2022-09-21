@@ -21,7 +21,7 @@ public class JWTAuthEntryPoint extends BasicAuthenticationEntryPoint {
     public void commence(
             HttpServletRequest request, HttpServletResponse response, AuthenticationException authEx)
             throws IOException {
-        response.addHeader("Authorization", "Basic realm=" + getRealmName());
+        response.addHeader("www-authorization", "Basic realm=" + getRealmName());
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         PrintWriter writer = response.getWriter();
         writer.print("HTTP Status 401 - " + authEx.getMessage());
