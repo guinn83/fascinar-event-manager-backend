@@ -16,7 +16,8 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/user")
-@PreAuthorize("hasAuthority('ADMIN')")
+//@PreAuthorize("hasAuthority('ADMIN')")
+@CrossOrigin //temporario
 public class UserController {
 
     @Autowired
