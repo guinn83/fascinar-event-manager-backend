@@ -40,6 +40,8 @@ public class UserService {
         }
         try {
             userModel.setPassword(encoder.encode(userModel.getPassword()));
+            userModel.setLocked(userModel.getLocked() != null && userModel.getLocked());
+            userModel.setEnabled(userModel.getEnabled() == null || userModel.getEnabled());
             return repository.save(userModel);
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException(e.getMessage());

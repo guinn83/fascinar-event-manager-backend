@@ -1,23 +1,30 @@
-import { Button, Container, FormControl, InputLabel, MenuItem, Paper, Select } from '@mui/material';
+import { Button, Container, FormControl, Icon, InputLabel, MenuItem, Paper, Select } from '@mui/material';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import { SetStateAction, useEffect, useState } from 'react';
 import { BASE_URL } from '../../utils/request';
 import { UserModel } from '../../models/user';
+import LockIcon from '@mui/icons-material/Lock';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import "./styles.css";
+import LockOpen from '@mui/icons-material/LockOpen';
+import { Edit, EditOff } from '@mui/icons-material';
 
 export default function AppUser() {
 
-  const paperStyle = { padding: '40px 30px', width: 400, margin: "20px auto" };
+  const paperStyle = { padding: '40px 30px', width: 500, margin: "20px auto" };
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [userRole, setUserRole] = useState('');
+  const [locked, setLocked] = useState('');
+  const [enabled, setEnable] = useState('');
   const [usermodels, setUsers] = useState<UserModel[]>([]);
 
 
   const handleClick = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    const userModel = { username, password, userRole };
+    const userModel = { username, password, userRole, locked, enabled };
     console.log(userModel);
 
     axios.post(`${BASE_URL}/user`,
@@ -42,7 +49,7 @@ export default function AppUser() {
 
   return (
     <Container>
-      <Paper elevation={3} style={paperStyle}>
+      <Paper className='fe-paper' elevation={3} >
         <h1>Adicionar usuário</h1>
 
         <Box component="form" sx={{ '& > :not(style)': { my: 1 }, }}
@@ -75,15 +82,17 @@ export default function AppUser() {
         <Button variant="contained" onClick={handleClick}>Adicionar</Button>
       </Paper>
 
-      <Paper elevation={3} style={paperStyle}>
-        <h1>Students</h1>
+      <Paper className='fe-paper' elevation={3}>
+        <h1>Usuários</h1>
         <div>
           <table className="fsceventos-user-table">
             <thead>
               <tr>
-                <th className="show992">ID</th>
-                <th className="show576">Username</th>
-                <th className="show992">Autoridade</th>
+                <th className="show576">ID</th>
+                <th>Username</th>
+                <th >Autoridade</th>
+                <th >Situação</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -91,9 +100,16 @@ export default function AppUser() {
                 usermodels.map(user => {
                   return (
                     <tr key={user.id}>
-                      <td className="show992">{user.id}</td>
+                      <td className="show576">{user.id}</td>
                       <td>{user.username}</td>
-                      <td className="show992">{user.userRole}</td>
+                      <td >{user.userRole}</td>
+                      <td >
+                        <div>
+                          {user.locked ? <LockIcon fontSize="small" /> : <LockOpen fontSize="small" />}
+                          {user.enabled ? <Edit fontSize="small" /> : <EditOff fontSize="small" />}
+                        </div>
+                      </td>
+                      <td><Button variant="contained" >Editar</Button></td>
                     </tr>)
                 })
               }
