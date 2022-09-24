@@ -1,9 +1,15 @@
 .fe-paper{
     justify-content: center;
-    width: 80%;
+    width: 85%;
     max-width: 530px;
     margin: 20px auto;
-    padding: 50px 30px;
+    padding: 5px 30px 40px;
+}
+
+.boxUser{
+    margin: 20px auto ;
+    padding: 10px auto;
+    
 }
 
 .fsceventos-user-table {
@@ -53,15 +59,15 @@
         display: table-cell;
     }
 
-    .dsmeta-card {
-        padding: 35px;
+    .fe-users {
+        padding: 0px;
     }
 
-    .dsmeta-sales-table tbody tr {
+    .fsceventos-user-table tbody tr {
         height: 55px;
     }
 
-    .dsmeta-sales-table tbody {
+    .fsceventos-user-table tbody {
         font-size: 18px;
     }
 }

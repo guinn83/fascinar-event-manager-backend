@@ -76,9 +76,9 @@ public class JWTAuthFilter extends UsernamePasswordAuthenticationFilter {
             case CUSTOMER-> redirectURL = "/api/v1/customer";
         }
 
-        response.sendRedirect(redirectURL);
+//        response.sendRedirect(redirectURL);
 
-        response.getWriter().write("{\"Authorization\": \"" + token + "\"}");
+        response.getWriter().write("{\"Token\": \"" + token + "\"}");
         response.getWriter().flush();
     }
 

@@ -50,21 +50,19 @@ public class JWTConfiguration {
 
         http
                 .headers().frameOptions().disable().and()
-                .cors().disable() //TEMPORARIO
-                .csrf().disable()
+                .csrf().disable().cors().and()
                 .authorizeHttpRequests()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
 //                .antMatchers("/api/v1/user/**").hasAnyAuthority("ADMIN")
                 .antMatchers("/api/v1/**").permitAll()
                 .anyRequest()
-                .permitAll() //TEMPORARIO
-//                .authenticated().and()
-//                .addFilter(new JWTAuthFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)), jwtProperties, userService))
-//                .addFilter(new JWTValidateFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)), jwtProperties, userService))
-//                .formLogin().and()
-//                .httpBasic()
-//                .authenticationEntryPoint(authEntryPoint)
+//                .permitAll() //TEMPORARIO
+                .authenticated().and()
+                .addFilter(new JWTAuthFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)), jwtProperties, userService))
+                .addFilter(new JWTValidateFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)), jwtProperties, userService))
+                .httpBasic()
+                .authenticationEntryPoint(authEntryPoint)
                 .and()
                 .exceptionHandling().accessDeniedPage("/api/v1/acesso-negado").and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

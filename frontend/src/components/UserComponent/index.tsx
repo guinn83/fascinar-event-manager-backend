@@ -6,14 +6,12 @@ import { SetStateAction, useEffect, useState } from 'react';
 import { BASE_URL } from '../../utils/request';
 import { UserModel } from '../../models/user';
 import LockIcon from '@mui/icons-material/Lock';
-import LockOpenIcon from '@mui/icons-material/LockOpen';
 import "./styles.css";
 import LockOpen from '@mui/icons-material/LockOpen';
 import { Edit, EditOff } from '@mui/icons-material';
 
 export default function AppUser() {
 
-  const paperStyle = { padding: '40px 30px', width: 500, margin: "20px auto" };
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [userRole, setUserRole] = useState('');
@@ -52,17 +50,17 @@ export default function AppUser() {
       <Paper className='fe-paper' elevation={3} >
         <h1>Adicionar usuário</h1>
 
-        <Box component="form" sx={{ '& > :not(style)': { my: 1 }, }}
+        <Box className='boxUser' component="form" sx={{ '& > :not(style)': { my: 1, pb: 0 },}}
           noValidate
           autoComplete="off">
 
-          <TextField id="outlined-basic" label="Username" variant="outlined" fullWidth
+          <TextField className='textField' id="outlined-basic" label="Username" variant="outlined" fullWidth
             value={username}
             onChange={(e) => setUsername(e.target.value)} />
-          <TextField id="outlined-basic" label="Password" variant="outlined" fullWidth
+          <TextField className='textField' id="outlined-basic" label="Password" variant="outlined" fullWidth
             value={password}
             onChange={(e) => setPassword(e.target.value)} />
-          <FormControl fullWidth>
+          <FormControl className='textField' fullWidth>
             <InputLabel id="demo-simple-select-label">Nível de acesso</InputLabel>
             <Select
               //defaultValue={3}
@@ -79,12 +77,12 @@ export default function AppUser() {
             </Select>
           </FormControl>
         </Box>
-        <Button variant="contained" onClick={handleClick}>Adicionar</Button>
+        <Button className='addButton' variant="contained" onClick={handleClick}>Adicionar</Button>
       </Paper>
 
       <Paper className='fe-paper' elevation={3}>
         <h1>Usuários</h1>
-        <div>
+        <div className='fe-users'>
           <table className="fsceventos-user-table">
             <thead>
               <tr>

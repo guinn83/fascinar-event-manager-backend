@@ -16,7 +16,6 @@ public class JWTAuthEntryPoint extends BasicAuthenticationEntryPoint {
         super();
     }
 
-
     @Override
     public void commence(
             HttpServletRequest request, HttpServletResponse response, AuthenticationException authEx)
@@ -26,7 +25,6 @@ public class JWTAuthEntryPoint extends BasicAuthenticationEntryPoint {
         PrintWriter writer = response.getWriter();
         writer.print("HTTP Status 401 - " + authEx.getMessage());
     }
-
 
     @Override
     public void afterPropertiesSet() {
