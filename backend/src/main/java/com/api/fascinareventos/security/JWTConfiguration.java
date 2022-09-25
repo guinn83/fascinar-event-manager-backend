@@ -54,6 +54,7 @@ public class JWTConfiguration {
                 .authorizeHttpRequests()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
+//                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 //                .antMatchers("/api/v1/user/**").hasAnyAuthority("ADMIN")
                 .antMatchers("/api/v1/**").permitAll()
                 .anyRequest()
@@ -62,8 +63,7 @@ public class JWTConfiguration {
                 .addFilter(new JWTAuthFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)), jwtProperties, userService))
                 .addFilter(new JWTValidateFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)), jwtProperties, userService))
                 .httpBasic()
-                .authenticationEntryPoint(authEntryPoint)
-                .and()
+                .authenticationEntryPoint(authEntryPoint).and()
                 .exceptionHandling().accessDeniedPage("/api/v1/acesso-negado").and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

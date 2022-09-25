@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -12,9 +11,9 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import BackgroundImage from '../../img/background/_UR_0588.jpg'
-import axios from 'axios';
-import { BASE_URL_LOCAL } from '../../utils/request';
-import { ContactsOutlined } from '@mui/icons-material';
+import { useState } from 'react';
+import authService from '../../services/auth.service';
+
 
 function Copyright(props: any) {
     return (
@@ -26,26 +25,47 @@ function Copyright(props: any) {
     );
 }
 
-const theme = createTheme();
+const theme = createTheme({
+    typography: {
+        body2: {
+            color: 'red'
+        }
+    }
+});
 
 export default function SignInSide() {
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const onChangeText = () => {
+        setError('');
+    }
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        onChangeText();
         const data = new FormData(event.currentTarget);
-        
-        axios.post(`${BASE_URL_LOCAL}/login`,
-            JSON.stringify({
-                username: data.get('username'),
-                password: data.get('password'),
-            }),
-            { headers: { 'Content-Type': 'application/json' } })
-            .then(res => {
-                console.log({
-                    username: data.get('username'),
-                    password: data.get('password'),
-                });
-                console.log(res.data)
-            });
+        setUsername(`${data.get('username-text')}`)
+        setPassword(`${data.get('password-text')}`)
+
+        await authService.login(username, password)
+        .catch((err) => {
+            if (err && err.response) {
+                switch (err.response.status) {
+                    case 401:
+                        //console.log(err.response);
+                        setError("Usuário ou senha inválidos")
+                        break;
+                    case 404:
+                        //console.log(err.response)
+                        setError("Usuário não encontrado")
+                    default:
+                        //console.log(err.response)
+                        setError("Erro ao fazer login! Tente novamente mais tarde")
+                }
+            }
+        });
+
     };
 
     return (
@@ -79,29 +99,35 @@ export default function SignInSide() {
                         <figure>
                             <img src='src/img/logo/fascinar-logo.png' alt="Minha Figura" width={200} />
                         </figure>
-                        <Typography component="h1" variant="h5">
-                        </Typography>
+
                         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
                             <TextField
+                                error={error?true:false}
+                                onChange={onChangeText}
                                 margin="normal"
                                 required
                                 fullWidth
-                                id="username"
+                                id="username-id"
                                 label="Login"
-                                name="username"
+                                name="username-text"
                                 autoComplete="username"
                                 autoFocus
                             />
                             <TextField
+                                error={error?true:false}
+                                onChange={onChangeText}
                                 margin="normal"
                                 required
                                 fullWidth
-                                name="password"
+                                name="password-text"
                                 label="Password"
                                 type="password"
-                                id="password"
+                                id="password-id"
                                 autoComplete="current-password"
                             />
+                            <Typography variant="body2">
+                                {error}
+                            </Typography>
                             <FormControlLabel
                                 control={<Checkbox value="remember" color="primary" />}
                                 label="Entrar automaticamente"

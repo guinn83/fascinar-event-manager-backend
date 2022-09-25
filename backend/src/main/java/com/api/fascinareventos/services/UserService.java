@@ -10,6 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,11 @@ public class UserService {
     }
 
     public UserDetails findByUsername(String username) {
-        return repository.findByUsername(username);
+        UserDetails user = repository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("Usuário [" + username + "] não encontrado");
+        }
+        return user;
     }
 
     @Transactional

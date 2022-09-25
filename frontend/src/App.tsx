@@ -2,7 +2,7 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
 import ButtonAppBar from './components/AppBar/AppBar'
-import AppUser from './components/UserComponent'
+import AddUser from './components/UserComponent'
 import SignInSide from './components/Login/sign-in'
 
 function App() {

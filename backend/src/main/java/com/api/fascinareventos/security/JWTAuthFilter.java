@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -35,22 +36,28 @@ public class JWTAuthFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
-                                                HttpServletResponse response) throws AuthenticationException {
+                                                HttpServletResponse response) throws AuthenticationException{
         try {
             UserModel userModel = new ObjectMapper().readValue(request.getInputStream(), UserModel.class);
 
             UserDetails userDetails = userService.findByUsername(userModel.getUsername());
-            if (userDetails == null) {
-                throw new UsernameNotFoundException("Username not found.");
-            }
 
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     userModel.getUsername(),
                     userModel.getPassword(),
                     userDetails.getAuthorities()));
         } catch (IOException e) {
-            throw new RuntimeException("Fail to authenticate user " + request.getUserPrincipal(), e);
+            throw new RuntimeException("Fail to authenticate user " + obtainUsername(request), e);
+        } catch (UsernameNotFoundException e) {
+            throw new UsernameNotFoundException(e.getMessage());
         }
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        response.setStatus(401);
+        response.getWriter().write(failed.getMessage());
+        response.getWriter().flush();
     }
 
     @Override
@@ -67,19 +74,19 @@ public class JWTAuthFilter extends UsernamePasswordAuthenticationFilter {
 
         response.addHeader(jwtProperties.getHeader(), jwtProperties.getPrefix() + token);
 
-        String redirectURL = "";
-
-        switch (userModel.getUserRole()) {
-            case ADMIN -> redirectURL = "/api/v1/user";
-            case PLANNER -> redirectURL = "/api/v1/planner";
-            case ASSISTANT -> redirectURL = "/api/v1/assistant";
-            case CUSTOMER-> redirectURL = "/api/v1/customer";
-        }
-
-//        response.sendRedirect(redirectURL);
-
-        response.getWriter().write("{\"Token\": \"" + token + "\"}");
+        response.getWriter().write("{\"token\": \"" + token + "\"}");
         response.getWriter().flush();
+
+//        String redirectURL = "";
+//
+//        switch (userModel.getUserRole()) {
+//            case ADMIN -> redirectURL = "/api/v1/user";
+//            case PLANNER -> redirectURL = "/api/v1/planner";
+//            case ASSISTANT -> redirectURL = "/api/v1/assistant";
+//            case CUSTOMER-> redirectURL = "/api/v1/customer";
+//        }
+//
+////        response.sendRedirect(redirectURL);
     }
 
 }

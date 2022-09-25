@@ -10,7 +10,7 @@ import "./styles.css";
 import LockOpen from '@mui/icons-material/LockOpen';
 import { Edit, EditOff } from '@mui/icons-material';
 
-export default function AppUser() {
+export default function AddUser() {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
