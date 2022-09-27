@@ -48,12 +48,17 @@ const getCurrentUser = () => {
     return JSON.parse(localStorage.getItem("user") || '{}');
 };
 
+function isSigned(){
+    return getToken() !== 'Bearer undefined';
+}
+
 const authService = {
     signup,
     login,
     logout,
     getCurrentUser,
     getToken,
+    isSigned,
 };
 
 export default authService;

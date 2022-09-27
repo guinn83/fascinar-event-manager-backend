@@ -65,6 +65,7 @@ export default function Login() {
                     case 404:
                         //console.log(err.response)
                         setError("Usuário não encontrado");
+                        break;
                     default:
                         //console.log(err.response)
                         setError("Erro ao fazer login! Tente novamente mais tarde");

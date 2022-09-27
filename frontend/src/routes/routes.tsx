@@ -3,13 +3,10 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import NavBar from "../components/AppBar";
 import Login from "../pages/Singin";
 import User from "../pages/UserComponent";
+import authService from "../services/auth.service";
 
 const Private = ({ Item }) => {
-    let signed = JSON.parse(localStorage.getItem("user") || '{}')
-
-    //console.log(signed)
-
-    return signed ? <Item /> : <Login />;
+    return authService.isSigned() ? <Item /> : <Login />;
 };
 
 const RoutesApp = () => {
