@@ -1,20 +1,9 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
 import './App.css'
-import ButtonAppBar from './components/AppBar/AppBar'
-import AddUser from './components/UserComponent'
-import SignInSide from './components/Login/sign-in'
+import RoutesApp from './routes/routes';
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
 
   return (
-    <div className="App">
-        <SignInSide/>
-        
-        
-    </div>
-  )
+    <RoutesApp />
+  );
 }
-
-export default App

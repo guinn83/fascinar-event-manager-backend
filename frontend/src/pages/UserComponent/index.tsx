@@ -1,4 +1,4 @@
-import { Button, Container, FormControl, Icon, InputLabel, MenuItem, Paper, Select } from '@mui/material';
+import { Button, Container, FormControl, InputLabel, MenuItem, Paper, Select } from '@mui/material';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
@@ -8,9 +8,13 @@ import { UserModel } from '../../models/user';
 import LockIcon from '@mui/icons-material/Lock';
 import "./styles.css";
 import LockOpen from '@mui/icons-material/LockOpen';
-import { Edit, EditOff } from '@mui/icons-material';
+import { Edit, EditOff, TextFields } from '@mui/icons-material';
+import authHeader from '../../services/auth-header';
+import authService from '../../services/auth.service';
 
-export default function AddUser() {
+const API_URL = `${BASE_URL}`;
+
+export default function User() {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -18,35 +22,46 @@ export default function AddUser() {
   const [locked, setLocked] = useState('');
   const [enabled, setEnable] = useState('');
   const [usermodels, setUsers] = useState<UserModel[]>([]);
-
+  const [refreshKey, setRefreshKey] = useState(0)
 
   const handleClick = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     const userModel = { username, password, userRole, locked, enabled };
     console.log(userModel);
 
-    axios.post(`${BASE_URL}/user`,
+    axios.post(API_URL + "/user",
       JSON.stringify(userModel),
-      { headers: { 'Content-Type': 'application/json' } })
+      { headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': authService.getToken() } 
+      })
       .then(res => {
         console.log("Novo usuário adicionado");
+        setUsername('')
+        setPassword('')
+        setUserRole('')
+        setRefreshKey(oldkey => oldkey + 1)
       });
   };
 
   useEffect(() => {
-    axios.get(`${BASE_URL}/user`)
+    console.log(authHeader())
+    axios.get(API_URL + "/user", 
+    { headers: authHeader()})
       .then((res) => {
         setUsers(res.data);
         console.log(res.data)
       });
-  }, []);
+  }, [refreshKey]);
 
   const handleChange = (e: { target: { value: SetStateAction<string>; }; }) => {
     setUserRole(e.target.value);
   };
 
   return (
+    
     <Container>
+      
       <Paper className='fe-paper' elevation={3} >
         <h1>Adicionar usuário</h1>
 

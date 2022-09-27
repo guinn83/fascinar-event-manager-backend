@@ -10,26 +10,27 @@ const signup = (username: any, password: any) => {
             password,
         })
         .then((response) => {
-            if (response.data.accessToken) {
+            if (response.data.token) {
                 localStorage.setItem("user", JSON.stringify(response.data));
             }
-            console.log(response.data)
+            console.log(response.data.token)
             return response.data;
         });
 };
 
 const login = (username: any, password: any) => {
-    return axios.post(API_URL + "/login", 
+    return axios.post(API_URL + "/login",
         JSON.stringify({
             username: username,
             password: password,
         }),
         { headers: { 'Content-Type': 'application/json' } })
         .then((response) => {
-            if (response.data.accessToken) {
+            if (response.data.token) {
                 localStorage.setItem("user", JSON.stringify(response.data));
             }
-            console.log(response.data)
+            //let user = (JSON.parse(localStorage.getItem("user") || '{}'))
+            //console.log(user)
             return response.data;
         });
 };
@@ -38,8 +39,13 @@ const logout = () => {
     localStorage.removeItem("user");
 };
 
+const getToken = () => {
+    let user = JSON.parse(localStorage.getItem("user") || '{}')
+    return 'Bearer ' + user.token;
+};
+
 const getCurrentUser = () => {
-    return JSON.parse(`${localStorage.getItem("user")}`);
+    return JSON.parse(localStorage.getItem("user") || '{}');
 };
 
 const authService = {
@@ -47,6 +53,7 @@ const authService = {
     login,
     logout,
     getCurrentUser,
+    getToken,
 };
 
 export default authService;

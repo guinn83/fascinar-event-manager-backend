@@ -6,8 +6,29 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import authService from '../../services/auth.service';
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 
-export default function ButtonAppBar() {
+
+export default function NavBar() {
+  const [currentUser, setCurrentUser] = useState(undefined)
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    let user = (JSON.parse(localStorage.getItem("user") || '{}'))
+
+    if (user) {
+      setCurrentUser(user);
+    }
+  }, []);
+
+  const logOut = () => {
+    if (currentUser === "{}") { console.log(currentUser); }
+    authService.logout();
+    navigate("/login")
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -24,7 +45,9 @@ export default function ButtonAppBar() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Fascinar Eventos
           </Typography>
-          <Button color="inherit">Login</Button>
+          <Button color="inherit" onClick={logOut}>
+            Sair
+          </Button>
         </Toolbar>
       </AppBar>
     </Box>

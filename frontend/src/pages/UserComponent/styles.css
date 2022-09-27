@@ -38,7 +38,6 @@
 }
 
 .fsceventos-user-table tbody tr:hover>td {
-    font-weight: 500;
     background-color: #bbafce;
 }
 
