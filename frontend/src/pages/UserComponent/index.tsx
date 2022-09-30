@@ -11,11 +11,11 @@ import LockOpen from '@mui/icons-material/LockOpen';
 import { Edit, EditOff, TextFields } from '@mui/icons-material';
 import authHeader from '../../services/auth-header';
 import authService from '../../services/auth.service';
+import NavBar from '../../components/AppBar';
 
 const API_URL = `${BASE_URL}`;
 
 export default function User() {
-
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [userRole, setUserRole] = useState('');
@@ -45,12 +45,12 @@ export default function User() {
   };
 
   useEffect(() => {
-    console.log(authHeader())
+    //console.log(authHeader())
     axios.get(API_URL + "/user", 
     { headers: authHeader()})
       .then((res) => {
         setUsers(res.data);
-        console.log(res.data)
+        //console.log(res.data)
       });
   }, [refreshKey]);
 
@@ -59,13 +59,12 @@ export default function User() {
   };
 
   return (
-    
-    <Container>
-      
+    <Container className='container' maxWidth={false} disableGutters={true} >
+      <NavBar/>
       <Paper className='fe-paper' elevation={3} >
         <h1>Adicionar usuário</h1>
 
-        <Box className='boxUser' component="form" sx={{ '& > :not(style)': { my: 1, pb: 0 },}}
+        <Box className='boxUser' component="form" sx={{ '& > :not(style)': { my: 1 },}}
           noValidate
           autoComplete="off">
 

@@ -54,7 +54,7 @@ public class JWTConfiguration {
                 .authorizeHttpRequests()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
-//                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 //                .antMatchers("/api/v1/user/**").hasAnyAuthority("ADMIN")
                 .antMatchers("/api/v1/**").permitAll()
                 .anyRequest()

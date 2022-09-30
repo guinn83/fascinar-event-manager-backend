@@ -16,17 +16,16 @@ export default function NavBar() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    let user = (JSON.parse(localStorage.getItem("user") || '{}'))
+    
 
-    if (user) {
-      setCurrentUser(user);
-    }
   }, []);
 
   const logOut = () => {
-    if (currentUser === "{}") { console.log(currentUser); }
     authService.logout();
-    navigate("/login")
+    if (!authService.isSigned()) {
+      console.log("Você deslogou");
+      navigate("/login")
+    }
   };
 
   return (

@@ -11,7 +11,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import BackgroundImage from "../../img/background/_UR_0588.jpg";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import authService from "../../services/auth.service";
 import { useNavigate } from "react-router-dom";
 
@@ -34,44 +34,42 @@ const theme = createTheme({
     typography: {
         body2: {
             color: "red",
+            textAlign: "center",
         },
     },
 });
 
+
+
 export default function Login() {
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
 
     const navigate = useNavigate();
 
+    useEffect(() => {
+        if (authService.isSigned()) {
+            navigate("/user")
+        }
+    }, []);
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setError("");
 
         await authService.login(username, password).then(
-            () => {
-                console.log("Login com sucesso")
-                navigate("/user")
-            },
-           
-        ).catch((err) => {
-            if (err && err.response) {
-                switch (err.response.status) {
-                    case 401:
-                        //console.log(err.response);
-                        setError("Usuário ou senha inválidos");
-                        break;
-                    case 404:
-                        //console.log(err.response)
-                        setError("Usuário não encontrado");
-                        break;
-                    default:
-                        //console.log(err.response)
-                        setError("Erro ao fazer login! Tente novamente mais tarde");
+            (resp) => {
+                if (authService.isSigned()) {
+                    console.log("Login com sucesso");
+                    navigate("/user");
+                } else {
+                    console.log(resp);
+                    setError(resp);
                 }
-            }
-        });
+            },
+        );
     };
 
     return (
@@ -114,6 +112,7 @@ export default function Login() {
                             </figure>
 
                             <Box
+                                className="boxLogin"
                                 component="form"
                                 noValidate
                                 onSubmit={handleSubmit}
@@ -143,7 +142,9 @@ export default function Login() {
                                     id="password-id"
                                     autoComplete="current-password"
                                 />
-                                <Typography variant="body2" >{error}</Typography>
+                                <Typography variant="body2" >
+                                    {error}
+                                </Typography>
                                 <FormControlLabel
                                     control={<Checkbox value="remember" color="primary" />}
                                     label="Entrar automaticamente"
@@ -157,7 +158,7 @@ export default function Login() {
                                     Entrar
                                 </Button>
                                 <Grid container>
-                                    <Grid item xs>
+                                    <Grid item xs >
                                         <Link href="#" variant="body2">
                                             Esqueceu a senha?
                                         </Link>

@@ -29,9 +29,21 @@ const login = (username: any, password: any) => {
             if (response.data.token) {
                 localStorage.setItem("user", JSON.stringify(response.data));
             }
-            //let user = (JSON.parse(localStorage.getItem("user") || '{}'))
-            //console.log(user)
             return response.data;
+        }).catch((err) => {
+            if (err && err.response) {
+                switch (err.response.status) {
+                    case 401:
+                        console.log(err.response);
+                        return "Usuário ou senha inválidos";
+                    case 404:
+                        console.log(err.response)
+                        return "Usuário não encontrado";
+                    default:
+                        //console.log(err.response)
+                        return "Erro ao fazer login! Tente novamente mais tarde";
+                }
+            }
         });
 };
 

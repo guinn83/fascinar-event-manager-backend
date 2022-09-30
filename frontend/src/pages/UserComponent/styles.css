@@ -1,5 +1,6 @@
+
 .fe-paper{
-    justify-content: center;
+    text-align: center;
     width: 85%;
     max-width: 530px;
     margin: 20px auto;
@@ -9,7 +10,6 @@
 .boxUser{
     margin: 20px auto ;
     padding: 10px auto;
-    
 }
 
 .fsceventos-user-table {
@@ -57,7 +57,7 @@
     .show576 {
         display: table-cell;
     }
-
+    
     .fe-users {
         padding: 0px;
     }
