@@ -40,17 +40,17 @@ public class EventModel implements Serializable {
 
     @OneToOne
     @JsonIgnore
-    private BillModel billModel;
+    private Bill bill;
 
     @ManyToOne
-    private CustomerModel customerModel;
+    private Customer customer;
 
     @OneToMany
     @JoinTable(
             name = "tb_event_team_join",
             joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
             inverseJoinColumns = {@JoinColumn(name = "team_event_id", referencedColumnName = "id")})
-    private Set<EventTeamModel> teamOfDay = new HashSet<>();
+    private Set<EventTeam> teamOfDay = new HashSet<>();
 
     public EventModel(URL avatar, String name, LocalDateTime eventDate, EventStatus status) {
         this.avatar = avatar;
@@ -59,7 +59,7 @@ public class EventModel implements Serializable {
         this.status = status;
     }
 
-    public EventModel(URL avatar, String name, LocalDateTime eventDate, EventStatus status, Set<EventTeamModel> teamOfDay ) {
+    public EventModel(URL avatar, String name, LocalDateTime eventDate, EventStatus status, Set<EventTeam> teamOfDay ) {
         this.avatar = avatar;
         this.name = name;
         this.eventDate = eventDate;

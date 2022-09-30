@@ -18,7 +18,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Getter
 @Setter
-public class TeamModel implements Serializable {
+public class Team implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -35,11 +35,11 @@ public class TeamModel implements Serializable {
     private TeamRoles role;
     @OneToOne
     @JoinColumn(name = "user_id", nullable = true)
-    private UserModel user;
+    private User user;
 
     private Boolean enable = true;
 
-    public TeamModel(URL avatar, String name, TeamRoles role, UserModel user) {
+    public Team(URL avatar, String name, TeamRoles role, User user) {
         this.avatar = avatar;
         this.name = name;
         this.role = role;
@@ -50,8 +50,8 @@ public class TeamModel implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        TeamModel teamModel = (TeamModel) o;
-        return id != null && Objects.equals(id, teamModel.id);
+        Team team = (Team) o;
+        return id != null && Objects.equals(id, team.id);
     }
 
     @Override

@@ -17,7 +17,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Setter
 @Getter
-public class BillInstallmentModel implements Serializable {
+public class BillInstallment implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -34,13 +34,13 @@ public class BillInstallmentModel implements Serializable {
     private LocalDate paymentDate;
 
     @ManyToOne
-    private BillModel billModels;
+    private Bill billModels;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BillInstallmentModel that = (BillInstallmentModel) o;
+        BillInstallment that = (BillInstallment) o;
         return Objects.equals(id, that.id);
     }
 

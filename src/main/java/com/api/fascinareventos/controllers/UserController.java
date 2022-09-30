@@ -1,6 +1,6 @@
 package com.api.fascinareventos.controllers;
 
-import com.api.fascinareventos.models.UserModel;
+import com.api.fascinareventos.models.User;
 import com.api.fascinareventos.repositories.UserRepository;
 import com.api.fascinareventos.services.UserService;
 import com.api.fascinareventos.services.exceptions.ResourceNotFoundException;
@@ -28,20 +28,20 @@ public class UserController {
     private static final String USER_NOT_FOUND = "User not found.";
 
     @PostMapping
-    public ResponseEntity<UserModel> createUser(@RequestBody UserModel userModel) {
-        userModel = service.insertUser(userModel);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(userModel.getId()).toUri();
-        return ResponseEntity.created(uri).body(userModel);
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        user = service.insertUser(user);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
+        return ResponseEntity.created(uri).body(user);
     }
 
     @GetMapping
-    public ResponseEntity<List<UserModel>> getAllUsers() {
+    public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok().body(repository.findAll());
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Object> getOneUser(@PathVariable(value = "id") Long id) {
-        Optional<UserModel> obj = repository.findById(id);
+        Optional<User> obj = repository.findById(id);
         if (obj.isEmpty()) {
             throw new ResourceNotFoundException(id, USER_NOT_FOUND);
         }
@@ -50,8 +50,8 @@ public class UserController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<Object> updateUser(@PathVariable(value = "id") Long id,
-                                             @RequestBody UserModel userModel) {
-        return ResponseEntity.ok().body(service.updateUser(id, userModel));
+                                             @RequestBody User user) {
+        return ResponseEntity.ok().body(service.updateUser(id, user));
     }
 
     @DeleteMapping(value = "/{id}")

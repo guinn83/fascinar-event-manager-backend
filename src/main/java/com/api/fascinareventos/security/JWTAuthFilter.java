@@ -1,7 +1,7 @@
 package com.api.fascinareventos.security;
 
 import com.api.fascinareventos.config.JwtProperties;
-import com.api.fascinareventos.models.UserModel;
+import com.api.fascinareventos.models.User;
 import com.api.fascinareventos.services.UserService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -37,13 +37,13 @@ public class JWTAuthFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException{
         try {
-            UserModel userModel = new ObjectMapper().readValue(request.getInputStream(), UserModel.class);
+            User user = new ObjectMapper().readValue(request.getInputStream(), User.class);
 
-            UserDetails userDetails = userService.findByUsername(userModel.getUsername());
+            UserDetails userDetails = userService.findByUsername(user.getUsername());
 
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                    userModel.getUsername(),
-                    userModel.getPassword(),
+                    user.getUsername(),
+                    user.getPassword(),
                     userDetails.getAuthorities()));
         } catch (IOException e) {
             throw new RuntimeException("Fail to authenticate user " + obtainUsername(request), e);
@@ -64,10 +64,10 @@ public class JWTAuthFilter extends UsernamePasswordAuthenticationFilter {
                                             HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
-        UserModel userModel = (UserModel) authResult.getPrincipal();
+        User user = (User) authResult.getPrincipal();
 
         String token = JWT.create()
-                .withSubject(userModel.getUsername())
+                .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + jwtProperties.getExpiration()))
                 .sign(Algorithm.HMAC512(jwtProperties.getSecret()));
 

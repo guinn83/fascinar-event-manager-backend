@@ -20,7 +20,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-public class BillModel implements Serializable {
+public class Bill implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -41,9 +41,9 @@ public class BillModel implements Serializable {
     private EventModel eventModel;
 
     @OneToMany(mappedBy = "billModels")
-    private Set<BillInstallmentModel> installments = new HashSet<>();
+    private Set<BillInstallment> installments = new HashSet<>();
 
-    public BillModel(LocalDate initialDate, String supplier, String description, Double totalValue, BillStatus status, EventModel eventModel) {
+    public Bill(LocalDate initialDate, String supplier, String description, Double totalValue, BillStatus status, EventModel eventModel) {
         this.initialDate = initialDate;
         this.supplier = supplier;
         this.description = description;
@@ -52,7 +52,7 @@ public class BillModel implements Serializable {
         this.eventModel = eventModel;
     }
 
-    public BillModel(LocalDate initialDate, String supplier, String description, Double totalValue, BillStatus status, EventModel eventModel, Set<BillInstallmentModel> installments) {
+    public Bill(LocalDate initialDate, String supplier, String description, Double totalValue, BillStatus status, EventModel eventModel, Set<BillInstallment> installments) {
         this.initialDate = initialDate;
         this.supplier = supplier;
         this.description = description;
@@ -66,7 +66,7 @@ public class BillModel implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        BillModel that = (BillModel) o;
+        Bill that = (Bill) o;
         return id != null && Objects.equals(id, that.id);
     }
 

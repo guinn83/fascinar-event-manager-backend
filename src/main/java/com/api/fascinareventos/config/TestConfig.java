@@ -27,11 +27,11 @@ public class TestConfig implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        UserModel u1 = new UserModel("guinn83", encoder.encode("123456"), UserRole.ADMIN, false, true);
-        UserModel u2 = new UserModel("vaninha.85", encoder.encode("123456"), UserRole.PLANNER, false, true);
-        UserModel u3 = new UserModel("moniky", encoder.encode("123456"), UserRole.ASSISTANT, false, true);
-        UserModel u4 = new UserModel("vanessa", encoder.encode("123456"), UserRole.ASSISTANT, false, true);
-        UserModel u5 = new UserModel("michele", encoder.encode("123456"), UserRole.CUSTOMER, false, true);
+        User u1 = new User("guinn83", encoder.encode("123456"), UserRole.ADMIN, false, true);
+        User u2 = new User("vaninha.85", encoder.encode("123456"), UserRole.PLANNER, false, true);
+        User u3 = new User("moniky", encoder.encode("123456"), UserRole.ASSISTANT, false, true);
+        User u4 = new User("vanessa", encoder.encode("123456"), UserRole.ASSISTANT, false, true);
+        User u5 = new User("michele", encoder.encode("123456"), UserRole.CUSTOMER, false, true);
         userRepository.saveAll(Arrays.asList(u1, u2, u3, u4));
 
         TeamRoles tr1 = new TeamRoles("Cerimonialista");
@@ -40,24 +40,24 @@ public class TestConfig implements CommandLineRunner {
         TeamRoles tr4 = new TeamRoles("Assistente");
         teamRolesRepository.saveAll(Arrays.asList(tr1, tr2, tr3, tr4));
 
-        TeamModel t1 = new TeamModel(null, "Vânia Alves", tr1, u2);
-        TeamModel t2 = new TeamModel(null, "Wagner Alves", tr2, u1);
-        TeamModel t3 = new TeamModel(null, "Monik", tr3, u3);
-        TeamModel t4 = new TeamModel(null, "Vanessa", tr4, u4);
+        Team t1 = new Team(null, "Vânia Alves", tr1, u2);
+        Team t2 = new Team(null, "Wagner Alves", tr2, u1);
+        Team t3 = new Team(null, "Monik", tr3, u3);
+        Team t4 = new Team(null, "Vanessa", tr4, u4);
         teamRepository.saveAll(Arrays.asList(t1, t2, t3, t4));
 
-        Set<EventTeamModel> te1 = new HashSet<>();
-        te1.add(new EventTeamModel(t1.getId(), t1.getName(), tr1.getRole()));
-        te1.add(new EventTeamModel(t2.getId(), t2.getName(), tr2.getRole()));
-        te1.add(new EventTeamModel(t3.getId(), t3.getName(), tr3.getRole()));
-        te1.add(new EventTeamModel(t4.getId(), t4.getName(), tr3.getRole()));
+        Set<EventTeam> te1 = new HashSet<>();
+        te1.add(new EventTeam(t1.getId(), t1.getName(), tr1.getRole()));
+        te1.add(new EventTeam(t2.getId(), t2.getName(), tr2.getRole()));
+        te1.add(new EventTeam(t3.getId(), t3.getName(), tr3.getRole()));
+        te1.add(new EventTeam(t4.getId(), t4.getName(), tr3.getRole()));
         teamEventoRepository.saveAll(te1);
 
-        Set<EventTeamModel> te2 = new HashSet<>();
-        te2.add(new EventTeamModel(t1.getId(), t2.getName(), tr1.getRole()));
-        te2.add(new EventTeamModel(t1.getId(), t3.getName(), tr3.getRole()));
-        te2.add(new EventTeamModel(t1.getId(), t4.getName(), tr4.getRole()));
-        te2.add(new EventTeamModel("Maria José", "Banheirista"));
+        Set<EventTeam> te2 = new HashSet<>();
+        te2.add(new EventTeam(t1.getId(), t2.getName(), tr1.getRole()));
+        te2.add(new EventTeam(t1.getId(), t3.getName(), tr3.getRole()));
+        te2.add(new EventTeam(t1.getId(), t4.getName(), tr4.getRole()));
+        te2.add(new EventTeam("Maria José", "Banheirista"));
 
         teamEventoRepository.saveAll(te2);
 

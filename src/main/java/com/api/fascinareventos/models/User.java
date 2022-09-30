@@ -19,7 +19,7 @@ import java.util.Objects;
 @Table(name = "tb_user")
 @Data
 @NoArgsConstructor
-public class UserModel implements UserDetails, Serializable {
+public class User implements UserDetails, Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -37,7 +37,7 @@ public class UserModel implements UserDetails, Serializable {
     private Boolean locked = false;
     private Boolean enabled = true;
 
-    public UserModel(String username, String password, UserRole userRole, Boolean locked, Boolean enabled) {
+    public User(String username, String password, UserRole userRole, Boolean locked, Boolean enabled) {
         this.username = username;
         this.password = password;
         this.userRole = userRole;
@@ -85,8 +85,8 @@ public class UserModel implements UserDetails, Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        UserModel userModel = (UserModel) o;
-        return id != null && Objects.equals(id, userModel.id);
+        User user = (User) o;
+        return id != null && Objects.equals(id, user.id);
     }
 
     @Override

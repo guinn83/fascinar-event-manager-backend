@@ -1,6 +1,6 @@
 package com.api.fascinareventos.services;
 
-import com.api.fascinareventos.models.UserModel;
+import com.api.fascinareventos.models.User;
 import com.api.fascinareventos.repositories.UserRepository;
 import com.api.fascinareventos.services.exceptions.DatabaseException;
 import com.api.fascinareventos.services.exceptions.ResourceNotFoundException;
@@ -39,27 +39,27 @@ public class UserService {
     }
 
     @Transactional
-    public UserModel insertUser(UserModel userModel) {
-        if (repository.existsByUsername(userModel.getUsername())) {
+    public User insertUser(User user) {
+        if (repository.existsByUsername(user.getUsername())) {
             throw new DatabaseException(HttpStatus.CONFLICT, "User already exists.");
         }
         try {
-            userModel.setPassword(encoder.encode(userModel.getPassword()));
-            userModel.setLocked(userModel.getLocked() != null && userModel.getLocked());
-            userModel.setEnabled(userModel.getEnabled() == null || userModel.getEnabled());
-            return repository.save(userModel);
+            user.setPassword(encoder.encode(user.getPassword()));
+            user.setLocked(user.getLocked() != null && user.getLocked());
+            user.setEnabled(user.getEnabled() == null || user.getEnabled());
+            return repository.save(user);
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException(e.getMessage());
         }
     }
 
     @Transactional
-    public UserModel updateUser(Long id, UserModel obj) {
-        Optional<UserModel> userOptional = repository.findById(id);
+    public User updateUser(Long id, User obj) {
+        Optional<User> userOptional = repository.findById(id);
         if (userOptional.isEmpty()) {
             throw new ResourceNotFoundException(id, USER_NOT_FOUND);
         }
-        var newUser = new UserModel();
+        var newUser = new User();
         BeanUtils.copyProperties(obj, newUser);
         newUser.setId(userOptional.get().getId());
         return repository.save(newUser);

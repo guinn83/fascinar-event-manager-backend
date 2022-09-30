@@ -19,7 +19,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerModel implements Serializable {
+public class Customer implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -37,14 +37,14 @@ public class CustomerModel implements Serializable {
     @Column(name = "email")
     private String email;
 
-    @OneToMany(mappedBy = "customerModel")
+    @OneToMany(mappedBy = "customer")
     private Set<EventModel> events = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        CustomerModel that = (CustomerModel) o;
+        Customer that = (Customer) o;
         return id != null && Objects.equals(id, that.id);
     }
 

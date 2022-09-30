@@ -17,7 +17,7 @@ import java.util.Set;
 @Setter
 @ToString
 @Table(name = "tb_team_event")
-public class EventTeamModel implements Serializable {
+public class EventTeam implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -27,7 +27,7 @@ public class EventTeamModel implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
     @Transient
-    private TeamModel teamModel;
+    private Team team;
     @Column(name = "team_model_id")
     private Long teamModelId;
     @Column(name = "team_model_name")
@@ -39,16 +39,16 @@ public class EventTeamModel implements Serializable {
     @JsonIgnore //StackOverFlow error, without this...
     private Set<EventModel> event;
 
-    public EventTeamModel(String name) {
+    public EventTeam(String name) {
         this.name = name;
     }
 
-    public EventTeamModel(String name, String eventRole) {
+    public EventTeam(String name, String eventRole) {
         this.name = name;
         this.eventRole = eventRole;
     }
 
-    public EventTeamModel(Long teamModelId, String name, String eventRole) {
+    public EventTeam(Long teamModelId, String name, String eventRole) {
         this.teamModelId = teamModelId;
         this.name = name;
         this.eventRole = eventRole;
@@ -58,7 +58,7 @@ public class EventTeamModel implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        EventTeamModel that = (EventTeamModel) o;
+        EventTeam that = (EventTeam) o;
         return id != null && Objects.equals(id, that.id);
     }
 
