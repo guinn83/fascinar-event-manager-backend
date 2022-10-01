@@ -37,7 +37,7 @@ public class EventTeam implements Serializable {
 
     @ManyToMany(mappedBy = "teamOfDay")
     @JsonIgnore //StackOverFlow error, without this...
-    private Set<EventModel> event;
+    private Set<EventModel> eventModel;
 
     public EventTeam(String name) {
         this.name = name;

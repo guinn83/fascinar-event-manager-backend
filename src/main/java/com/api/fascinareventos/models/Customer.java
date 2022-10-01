@@ -38,7 +38,7 @@ public class Customer implements Serializable {
     private String email;
 
     @OneToMany(mappedBy = "customer")
-    private Set<EventModel> events = new HashSet<>();
+    private Set<EventModel> eventModels = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
