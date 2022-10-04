@@ -1,5 +1,6 @@
 package com.api.fascinareventos.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,8 +34,24 @@ public class BillInstallment implements Serializable {
     private BillStatus status;
     private LocalDate paymentDate;
 
+    @JsonIgnore
     @ManyToOne
     private Bill billModels;
+
+    public BillInstallment(LocalDate installmentDate, Byte installment, Double installmentValue, BillStatus status) {
+        this.installmentDate = installmentDate;
+        this.installment = installment;
+        this.installmentValue = installmentValue;
+        this.status = status;
+    }
+
+    public BillInstallment(LocalDate installmentDate, Byte installment, Double installmentValue, BillStatus status, Bill billModels) {
+        this.installmentDate = installmentDate;
+        this.installment = installment;
+        this.installmentValue = installmentValue;
+        this.status = status;
+        this.billModels = billModels;
+    }
 
     @Override
     public boolean equals(Object o) {

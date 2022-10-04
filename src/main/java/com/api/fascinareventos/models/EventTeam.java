@@ -15,7 +15,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString
 @Table(name = "tb_team_event")
 public class EventTeam implements Serializable {
 

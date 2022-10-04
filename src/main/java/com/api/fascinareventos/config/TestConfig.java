@@ -8,8 +8,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Consumer;
 
 @Configuration
 @Profile("test")
@@ -23,6 +25,8 @@ public class TestConfig implements CommandLineRunner {
     private TeamRepository teamRepository;
     private EventRepository eventRepository;
     private EventTeamRepository teamEventoRepository;
+    private BillRepository billRepository;
+    private BillInstallmentRepository billInstallmentRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -67,5 +71,24 @@ public class TestConfig implements CommandLineRunner {
         EventModel e4 = new EventModel(null, "Priscila e Biro", LocalDateTime.now(), EventStatus.REALIZADO);
         eventRepository.saveAll(Arrays.asList(e1, e2, e3, e4));
 
+        Bill b1 = new Bill("Fascinar Eventos", "Assessoria",e1);
+        Bill b2 = new Bill("Gu Reis", "Fotografia", e1);
+        Bill b3 = new Bill("Rafael Nazar", "Decoração", e1);
+
+        List<BillInstallment> list = new ArrayList<>();
+        list.add(new BillInstallment(LocalDate.now(), (byte) 0, 1640.0, BillStatus.A_PAGAR, b1));
+        list.add(new BillInstallment(LocalDate.now(), (byte) 1, 450.0, BillStatus.A_PAGAR, b1));
+        list.add(new BillInstallment(LocalDate.now(), (byte) 2, 450.0, BillStatus.A_PAGAR, b1));
+        list.add(new BillInstallment(LocalDate.now(), (byte) 3, 440.0, BillStatus.A_PAGAR, b1));
+
+        b1.setInstallments(list);
+
+        b1.setNextDate(b1.getInstallments().stream()
+                .filter(s -> s.getStatus() == BillStatus.A_PAGAR)
+                .map(BillInstallment::getInstallmentDate)
+                .findFirst().orElse(null));
+
+        billRepository.saveAll(Arrays.asList(b1, b2, b3));
+        billInstallmentRepository.saveAll(list);
     }
 }

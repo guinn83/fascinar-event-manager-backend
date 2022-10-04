@@ -39,7 +39,7 @@ public class UserController {
         return ResponseEntity.ok().body(repository.findAll());
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Object> getOneUser(@PathVariable(value = "id") Long id) {
         Optional<User> obj = repository.findById(id);
         if (obj.isEmpty()) {
@@ -48,13 +48,13 @@ public class UserController {
         return ResponseEntity.ok().body(obj);
     }
 
-    @PutMapping(value = "/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Object> updateUser(@PathVariable(value = "id") Long id,
                                              @RequestBody User user) {
         return ResponseEntity.ok().body(service.updateUser(id, user));
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         service.deleteUser(id);
         return ResponseEntity.ok().build();

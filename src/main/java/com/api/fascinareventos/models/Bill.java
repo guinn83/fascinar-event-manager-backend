@@ -1,5 +1,6 @@
 package com.api.fascinareventos.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +11,7 @@ import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "tb_bills")
@@ -29,37 +28,47 @@ public class Bill implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @Column(name = "initial_date", nullable = false)
-    private LocalDate initialDate;
     @Column(name = "supplier", nullable = false)
     private String supplier;
     private String description;
-    private Double totalValue;
     private BillStatus status;
 
+//    @Transient
+    private LocalDate nextDate;
+
+    @JsonIgnore
     @OneToOne
     private EventModel eventModel;
 
     @OneToMany(mappedBy = "billModels")
-    private Set<BillInstallment> installments = new HashSet<>();
+    private List<BillInstallment> installments = new ArrayList<>();
 
-    public Bill(LocalDate initialDate, String supplier, String description, Double totalValue, BillStatus status, EventModel eventModel) {
-        this.initialDate = initialDate;
+    public Bill(String supplier, String description, EventModel eventModel) {
+//        this.initialDate = initialDate;
         this.supplier = supplier;
         this.description = description;
-        this.totalValue = totalValue;
-        this.status = status;
         this.eventModel = eventModel;
     }
 
-    public Bill(LocalDate initialDate, String supplier, String description, Double totalValue, BillStatus status, EventModel eventModel, Set<BillInstallment> installments) {
-        this.initialDate = initialDate;
+    public Bill(String supplier, String description, EventModel eventModel, List<BillInstallment> installments) {
+//        this.initialDate = initialDate;
         this.supplier = supplier;
         this.description = description;
-        this.totalValue = totalValue;
-        this.status = status;
         this.eventModel = eventModel;
         this.installments = installments;
+    }
+
+    public Double getTotalValue() {
+        return installments.stream()
+                .mapToDouble(BillInstallment::getInstallmentValue)
+                .sum();
+    }
+
+    public Double sumBillNotPaid() {
+        return installments.stream()
+                .filter(b -> b.getStatus() == BillStatus.A_PAGAR)
+                .mapToDouble(BillInstallment::getInstallmentValue)
+                .sum();
     }
 
     @Override

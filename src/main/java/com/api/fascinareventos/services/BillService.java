@@ -1,8 +1,7 @@
 package com.api.fascinareventos.services;
 
-import com.api.fascinareventos.models.EventModel;
-import com.api.fascinareventos.models.EventStatus;
-import com.api.fascinareventos.repositories.EventRepository;
+import com.api.fascinareventos.models.Bill;
+import com.api.fascinareventos.repositories.BillRepository;
 import com.api.fascinareventos.services.exceptions.DatabaseException;
 import com.api.fascinareventos.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.BeanUtils;
@@ -17,50 +16,49 @@ import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
-public class EventService {
+public class BillService {
 
     @Autowired
-    private EventRepository repository;
+    private BillRepository repository;
 
     @Transactional
-    public EventModel insertEvent(EventModel eventModel) {
+    public Bill insertBill(Bill bill) {
         try {
-            if (eventModel.getStatus() == null) {
-                eventModel.setStatus(EventStatus.A_REALIZAR);
-            }
-            return repository.save(eventModel);
+            return repository.save(bill);
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException(e.getMessage());
         }
     }
 
     @Transactional
-    public EventModel updateEvent(Long id, EventModel eventModel) {
-        Optional<EventModel> obj = repository.findById(id);
+    public Bill updateBill(Long id, Bill bill) {
+        Optional<Bill> obj = repository.findById(id);
         if (obj.isEmpty()) {
-            throw new ResourceNotFoundException(id, "Event not found");
+            throw new ResourceNotFoundException(id, "Bill not found");
         }
-        var newEvent = new EventModel();
-        BeanUtils.copyProperties(eventModel, newEvent);
-        newEvent.setId(obj.get().getId());
-        return repository.save(newEvent);
+        var newBill = new Bill();
+        BeanUtils.copyProperties(bill, newBill);
+        newBill.setId(obj.get().getId());
+        return repository.save(newBill);
     }
 
-    public Page<EventModel> findAll(Pageable pageable) {
+    public Page<Bill> findAll(Pageable pageable) {
         return repository.findAll(pageable);
     }
 
-    public Optional<EventModel> findById(Long id) {
+    public Optional<Bill> findById(Long id) {
         return repository.findById(id);
     }
 
-    public void deleteEvent(Long id) {
+    public void deleteBill(Long id) {
         try {
             repository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new ResourceNotFoundException(id, "Event not found");
+            throw new ResourceNotFoundException(id, "Bill not found");
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException(e.getMessage());
         }
     }
+
+
 }
