@@ -1,4 +1,4 @@
-package com.api.fascinareventos.models;
+package com.api.fascinareventos.models.enums;
 
 public enum EventStatus {
     A_REALIZAR(1),

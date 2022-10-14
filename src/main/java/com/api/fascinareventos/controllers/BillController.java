@@ -1,7 +1,10 @@
 package com.api.fascinareventos.controllers;
 
+import com.api.fascinareventos.dtos.BillDTO;
 import com.api.fascinareventos.models.Bill;
+import com.api.fascinareventos.models.EventModel;
 import com.api.fascinareventos.services.BillService;
+import com.api.fascinareventos.services.EventService;
 import com.api.fascinareventos.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,8 @@ public class BillController {
 
     @Autowired
     private BillService service;
+    @Autowired
+    private EventService eventService;
 
     private static final String NOT_FOUND = "Bill not found.";
 
@@ -35,7 +40,7 @@ public class BillController {
                     page = 0,
                     size = 10,
                     sort = "nextDate",
-                    direction = Sort.Direction.DESC)
+                    direction = Sort.Direction.ASC)
             Pageable pageable) {
         return ResponseEntity.ok().body(service.findAll(pageable));
     }
@@ -50,9 +55,15 @@ public class BillController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createEvent(@RequestBody @Valid Bill billModel) {
+    public ResponseEntity<?> createEvent(@RequestBody @Valid BillDTO billDTO) {
         Bill obj = new Bill();
-        BeanUtils.copyProperties(billModel, obj);
+        Long eventId = billDTO.getEventId();
+        Optional<EventModel> eventModel = eventService.findById(eventId);
+        if (eventModel.isEmpty()) {
+            throw new ResourceNotFoundException(eventId, "Event not found");
+        }
+        BeanUtils.copyProperties(billDTO, obj);
+        obj.setEventModel(eventModel.get());
         obj = service.insertBill(obj);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).body(obj);

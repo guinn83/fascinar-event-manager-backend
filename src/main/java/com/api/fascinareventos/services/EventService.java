@@ -1,7 +1,7 @@
 package com.api.fascinareventos.services;
 
 import com.api.fascinareventos.models.EventModel;
-import com.api.fascinareventos.models.EventStatus;
+import com.api.fascinareventos.models.enums.EventStatus;
 import com.api.fascinareventos.repositories.EventRepository;
 import com.api.fascinareventos.services.exceptions.DatabaseException;
 import com.api.fascinareventos.services.exceptions.ResourceNotFoundException;

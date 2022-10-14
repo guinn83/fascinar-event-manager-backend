@@ -1,5 +1,7 @@
 package com.api.fascinareventos.models;
 
+import com.api.fascinareventos.models.views.View;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,16 +29,22 @@ public class Customer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
+    @JsonView(View.Full.class)
     private Long id;
     @Column(name = "full_name", nullable = false)
+    @JsonView(View.Base.class)
     private String fullName;
     @Column(name = "social_name", nullable = false)
+    @JsonView(View.Base.class)
     private String socialName;
     @Column(name = "phone_number", nullable = false)
+    @JsonView(View.Base.class)
     private Integer phoneNumber;
     @Column(name = "email")
+    @JsonView(View.Base.class)
     private String email;
 
+    @JsonView(View.Full.class)
     @OneToMany(mappedBy = "customer")
     private Set<EventModel> eventModels = new HashSet<>();
 

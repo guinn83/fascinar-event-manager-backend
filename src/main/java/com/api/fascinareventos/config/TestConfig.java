@@ -1,7 +1,10 @@
 package com.api.fascinareventos.config;
 
 import com.api.fascinareventos.models.*;
+import com.api.fascinareventos.models.enums.BillStatus;
+import com.api.fascinareventos.models.enums.EventStatus;
 import com.api.fascinareventos.repositories.*;
+import com.api.fascinareventos.utils.enums.RoundOption;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.function.Consumer;
 
 @Configuration
 @Profile("test")
@@ -76,19 +78,17 @@ public class TestConfig implements CommandLineRunner {
         Bill b3 = new Bill("Rafael Nazar", "Decoração", e1);
 
         List<BillInstallment> list = new ArrayList<>();
-        list.add(new BillInstallment(LocalDate.now(), (byte) 0, 1640.0, BillStatus.A_PAGAR, b1));
-        list.add(new BillInstallment(LocalDate.now(), (byte) 1, 450.0, BillStatus.A_PAGAR, b1));
-        list.add(new BillInstallment(LocalDate.now(), (byte) 2, 450.0, BillStatus.A_PAGAR, b1));
-        list.add(new BillInstallment(LocalDate.now(), (byte) 3, 440.0, BillStatus.A_PAGAR, b1));
+        list.add(new BillInstallment(LocalDate.parse("2022-10-09"), (byte) 0, 1640.0, BillStatus.PAGO, b1));
+        list.add(new BillInstallment(LocalDate.parse("2022-10-10"), (byte) 1, 450.0, BillStatus.A_PAGAR, b1));
+        list.add(new BillInstallment(LocalDate.parse("2022-10-11"), (byte) 2, 450.0, BillStatus.A_PAGAR, b1));
+        list.add(new BillInstallment(LocalDate.parse("2022-10-12"), (byte) 3, 440.0, BillStatus.A_PAGAR, b1));
+        b1.setInstallmentsList(list);
 
-        b1.setInstallments(list);
-
-        b1.setNextDate(b1.getInstallments().stream()
-                .filter(s -> s.getStatus() == BillStatus.A_PAGAR)
-                .map(BillInstallment::getInstallmentDate)
-                .findFirst().orElse(null));
+        List<BillInstallment> list2 = b2.calcInstallmentList(LocalDate.now(), 3633.5, 0, 25, (byte) 5, RoundOption.ROUND_1);
+        b2.setInstallmentsList(list2);
 
         billRepository.saveAll(Arrays.asList(b1, b2, b3));
         billInstallmentRepository.saveAll(list);
+        billInstallmentRepository.saveAll(list2);
     }
 }

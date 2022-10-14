@@ -1,6 +1,9 @@
 package com.api.fascinareventos.models;
 
+import com.api.fascinareventos.models.enums.BillStatus;
+import com.api.fascinareventos.models.views.View;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,12 +29,18 @@ public class BillInstallment implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
+    @JsonView(View.Full.class)
     private Long id;
     @Column(name = "installment_date", nullable = false)
+    @JsonView(View.Base.class)
     private LocalDate installmentDate;
+    @JsonView(View.Base.class)
     private Byte installment;
+    @JsonView(View.Base.class)
     private Double installmentValue;
-    private BillStatus status;
+    @JsonView(View.Base.class)
+    private BillStatus status = BillStatus.A_PAGAR;
+    @JsonView(View.Base.class)
     private LocalDate paymentDate;
 
     @JsonIgnore
@@ -51,6 +60,21 @@ public class BillInstallment implements Serializable {
         this.installmentValue = installmentValue;
         this.status = status;
         this.billModels = billModels;
+    }
+
+    public BillInstallment(LocalDate installmentDate, Byte installment, Double installmentValue, BillStatus status, Bill billModels, LocalDate paymentDate) {
+        this.installmentDate = installmentDate;
+        this.installment = installment;
+        this.installmentValue = installmentValue;
+        this.status = status;
+        this.billModels = billModels;
+        this.paymentDate = paymentDate;
+    }
+
+    public void updateStatus() {
+        if (getStatus() == BillStatus.A_PAGAR && getInstallmentDate().isBefore(LocalDate.now())) {
+            setStatus(BillStatus.VENCIDA);
+        }
     }
 
     @Override

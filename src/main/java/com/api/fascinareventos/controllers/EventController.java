@@ -1,11 +1,16 @@
 package com.api.fascinareventos.controllers;
 
-import com.api.fascinareventos.DTOs.EventDTO;
+import com.api.fascinareventos.dtos.EventDTO;
 import com.api.fascinareventos.models.EventModel;
+import com.api.fascinareventos.models.views.View;
 import com.api.fascinareventos.services.EventService;
 import com.api.fascinareventos.services.exceptions.ResourceNotFoundException;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -31,6 +36,7 @@ public class EventController {
     private static final String USER_NOT_FOUND = "User not found.";
 
     @GetMapping
+    @JsonView(View.Base.class)
     public ResponseEntity<Page<EventModel>> getAllEvents(
             @PageableDefault(
                     page = 0,
@@ -42,6 +48,7 @@ public class EventController {
     }
 
     @GetMapping("/{id}")
+    @JsonView(View.Base.class)
     public ResponseEntity<?> getById(@PathVariable(value = "id") Long id) {
         Optional<EventModel> obj = service.findById(id);
         if (obj.isEmpty()) {

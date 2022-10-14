@@ -1,6 +1,6 @@
-package com.api.fascinareventos.DTOs;
+package com.api.fascinareventos.dtos;
 
-import com.api.fascinareventos.models.EventStatus;
+import com.api.fascinareventos.models.enums.EventStatus;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 

@@ -1,6 +1,8 @@
 package com.api.fascinareventos.models;
 
+import com.api.fascinareventos.models.views.View;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -24,14 +26,19 @@ public class EventTeam implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
+    @JsonView(View.Full.class)
     private Long id;
     @Transient
+    @JsonView(View.Full.class)
     private Team team;
     @Column(name = "team_model_id")
+    @JsonView(View.Full.class)
     private Long teamModelId;
     @Column(name = "team_model_name")
+    @JsonView(View.Base.class)
     private String name;
     @Column(name = "event_role")
+    @JsonView(View.Base.class)
     private String eventRole;
 
     @ManyToMany(mappedBy = "teamOfDay")

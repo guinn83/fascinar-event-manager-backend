@@ -59,6 +59,4 @@ public class BillService {
             throw new DatabaseException(e.getMessage());
         }
     }
-
-
 }

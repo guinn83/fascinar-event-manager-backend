@@ -1,6 +1,10 @@
 package com.api.fascinareventos.models;
 
+import com.api.fascinareventos.dtos.BillInfo;
+import com.api.fascinareventos.models.enums.EventStatus;
+import com.api.fascinareventos.models.views.View;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +17,7 @@ import java.io.Serializable;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -30,21 +35,31 @@ public class EventModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
+    @JsonView(View.Full.class)
     private Long id;
+    @JsonView(View.Base.class)
     private URL avatar;
+    @JsonView(View.Base.class)
     @Column(name="Name", nullable = false, length = 100)
     private String name;
+    @JsonView(View.Base.class)
     @Column(name="event_Date")
     private LocalDateTime eventDate;
+    @JsonView(View.Base.class)
     private EventStatus status;
 
-    @OneToOne
-    @JsonIgnore
-    private Bill bill;
 
+
+//    @JsonIgnore
+    @JsonView(View.Base.class)
+    @OneToMany(mappedBy = "eventModel")
+    private List<Bill> billList;
+
+    @JsonView(View.Full.class)
     @ManyToOne
     private Customer customer;
 
+    @JsonView(View.Full.class)
     @OneToMany
     @JoinTable(
             name = "tb_event_team_join",
@@ -65,6 +80,13 @@ public class EventModel implements Serializable {
         this.eventDate = eventDate;
         this.status = status;
         this.teamOfDay = teamOfDay;
+    }
+
+    @JsonView(View.Base.class)
+    public Double getTotalBillsValue() {
+        return billList.stream()
+                .mapToDouble(Bill::getTotalValue)
+                .sum();
     }
 
     @Override
