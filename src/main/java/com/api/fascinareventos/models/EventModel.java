@@ -51,7 +51,7 @@ public class EventModel implements Serializable {
 
 
 //    @JsonIgnore
-    @JsonView(View.Base.class)
+    @JsonView(View.Full.class)
     @OneToMany(mappedBy = "eventModel")
     private List<Bill> billList;
 

@@ -1,5 +1,6 @@
 package com.api.fascinareventos.services;
 
+import com.api.fascinareventos.dtos.BillInfo;
 import com.api.fascinareventos.models.Bill;
 import com.api.fascinareventos.repositories.BillRepository;
 import com.api.fascinareventos.services.exceptions.DatabaseException;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -45,6 +47,11 @@ public class BillService {
     public Page<Bill> findAll(Pageable pageable) {
         return repository.findAll(pageable);
     }
+
+//    public BillInfo findInfo() {
+//        List<Bill> bills = repository.findAll();
+//        return new BillInfo(bills);
+//    }
 
     public Optional<Bill> findById(Long id) {
         return repository.findById(id);

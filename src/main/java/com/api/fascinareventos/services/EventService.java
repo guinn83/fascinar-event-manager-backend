@@ -50,6 +50,10 @@ public class EventService {
         return repository.findAll(pageable);
     }
 
+    public Page<EventModel> findAllInfo(Pageable pageable) {
+        return repository.findAll(pageable);
+    }
+
     public Optional<EventModel> findById(Long id) {
         return repository.findById(id);
     }

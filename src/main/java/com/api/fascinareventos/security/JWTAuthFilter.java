@@ -71,21 +71,8 @@ public class JWTAuthFilter extends UsernamePasswordAuthenticationFilter {
                 .withExpiresAt(new Date(System.currentTimeMillis() + jwtProperties.getExpiration()))
                 .sign(Algorithm.HMAC512(jwtProperties.getSecret()));
 
-//        response.addHeader(jwtProperties.getHeader(), jwtProperties.getPrefix() + token);
-
         response.getWriter().write("{\"token\": \"" + token + "\"}");
         response.getWriter().flush();
-
-//        String redirectURL = "";
-//
-//        switch (userModel.getUserRole()) {
-//            case ADMIN -> redirectURL = "/api/v1/user";
-//            case PLANNER -> redirectURL = "/api/v1/planner";
-//            case ASSISTANT -> redirectURL = "/api/v1/assistant";
-//            case CUSTOMER-> redirectURL = "/api/v1/customer";
-//        }
-//
-////        response.sendRedirect(redirectURL);
     }
 
 }

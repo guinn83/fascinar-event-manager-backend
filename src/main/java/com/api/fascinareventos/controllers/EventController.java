@@ -37,7 +37,7 @@ public class EventController {
 
     @GetMapping
     @JsonView(View.Base.class)
-    public ResponseEntity<Page<EventModel>> getAllEvents(
+    public ResponseEntity<Page<EventModel>> getFullEvents(
             @PageableDefault(
                     page = 0,
                     size = 10,

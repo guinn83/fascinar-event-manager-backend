@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.api.fascinareventos.utils.MathUtil.RoundDecimal;
-import static com.api.fascinareventos.utils.MathUtil.RoundMulti;
+import static com.api.fascinareventos.utils.MathUtil.RoundMultiple;
 import static com.api.fascinareventos.utils.enums.RoundOption.DISABLE;
 
 
@@ -78,7 +78,9 @@ public class Bill implements Serializable{
 
     public void setInstallmentsList(List<BillInstallment> installmentsList) {
         this.installmentsList = installmentsList;
-        updateBill();
+        if (!installmentsList.isEmpty()) {
+            updateBill();
+        }
     }
 
     @JsonView(View.Base.class)
@@ -155,7 +157,7 @@ public class Bill implements Serializable{
             }
             dpValue = (roundOption == DISABLE) ?
                     RoundDecimal(dpValue, 2) :
-                    RoundMulti(dpValue, roundOption.getValue()) ;
+                    RoundMultiple(dpValue, roundOption.getValue()) ;
             list.add(new BillInstallment(firstDate, (byte) 0, dpValue, BillStatus.A_PAGAR, this));
         }
 
@@ -164,7 +166,7 @@ public class Bill implements Serializable{
         double installmentValue = newValue / installments;
         installmentValue = (roundOption == DISABLE) ?
                 RoundDecimal(installmentValue, 2) :
-                RoundMulti(installmentValue, roundOption.getValue());
+                RoundMultiple(installmentValue, roundOption.getValue());
 
         double lastInstallmentValue = newValue - (installmentValue * (installments - 1));
         lastInstallmentValue = (roundOption == DISABLE) ?

@@ -1,17 +1,23 @@
 package com.api.fascinareventos.controllers;
 
+import com.api.fascinareventos.dtos.BillCalcInstallmentDTO;
 import com.api.fascinareventos.dtos.BillDTO;
+import com.api.fascinareventos.dtos.BillInfo;
 import com.api.fascinareventos.models.Bill;
 import com.api.fascinareventos.models.EventModel;
 import com.api.fascinareventos.services.BillService;
 import com.api.fascinareventos.services.EventService;
+import com.api.fascinareventos.services.exceptions.DatabaseException;
 import com.api.fascinareventos.services.exceptions.ResourceNotFoundException;
+import com.api.fascinareventos.utils.enums.RoundOption;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +25,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @RestController
@@ -35,7 +42,7 @@ public class BillController {
     private static final String NOT_FOUND = "Bill not found.";
 
     @GetMapping
-    public ResponseEntity<Page<Bill>> getAllEvents(
+    public ResponseEntity<Page<Bill>> getAllBills(
             @PageableDefault(
                     page = 0,
                     size = 10,
@@ -44,6 +51,11 @@ public class BillController {
             Pageable pageable) {
         return ResponseEntity.ok().body(service.findAll(pageable));
     }
+
+//    @GetMapping("/{id}")
+//    public ResponseEntity<BillInfo> getInfo(@PathVariable(value = "id") Long id) {
+//        return ResponseEntity.ok().body(service.findInfo());
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(value = "id") Long id) {
@@ -55,7 +67,7 @@ public class BillController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createEvent(@RequestBody @Valid BillDTO billDTO) {
+    public ResponseEntity<?> createBill(@RequestBody @Valid BillDTO billDTO) {
         Bill obj = new Bill();
         Long eventId = billDTO.getEventId();
         Optional<EventModel> eventModel = eventService.findById(eventId);
@@ -69,13 +81,35 @@ public class BillController {
         return ResponseEntity.created(uri).body(obj);
     }
 
+    @PatchMapping("/{id}/calcInstallment")
+    public ResponseEntity<?> createBillInstallments(@PathVariable(name = "id") Long id, @RequestBody BillCalcInstallmentDTO obj) throws JSONException {
+        Optional<Bill> bill = service.findById(id);
+        if (bill.isEmpty()) {
+            throw new ResourceNotFoundException(id, NOT_FOUND);
+        }
+
+        if (!bill.get().getInstallmentsList().isEmpty()) {
+            throw new DatabaseException(HttpStatus.CONFLICT, "Parcelas já existem nessa conta");
+        }
+
+        LocalDate firstDate = obj.getFirstDate();
+        double totalValue = obj.getTotalValue();
+        double downPaymentValue = obj.getDownPaymentValue();
+        double downPaymentPercent = obj.getDownPaymentPercent();
+        byte installments = (byte) obj.getInstallments();
+        RoundOption roundOption = obj.getRoundOption();
+
+        bill.get().setInstallmentsList(bill.get().calcInstallmentList(firstDate, totalValue, downPaymentValue, downPaymentPercent, installments, roundOption));
+        return ResponseEntity.ok().body(service.updateBill(id, bill.get()));
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateEvent(@PathVariable(name = "id") Long id, @RequestBody @Valid Bill billModel) {
+    public ResponseEntity<?> updateBill(@PathVariable(name = "id") Long id, @RequestBody @Valid Bill billModel) {
         return ResponseEntity.ok().body(service.updateBill(id, billModel));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteBill(@PathVariable Long id) {
         service.deleteBill(id);
         return ResponseEntity.ok().build();
     }
