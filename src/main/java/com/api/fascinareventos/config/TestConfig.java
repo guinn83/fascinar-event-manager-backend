@@ -77,9 +77,11 @@ public class TestConfig implements CommandLineRunner {
         Bill b2 = new Bill("Gu Reis", "Fotografia", e1);
         Bill b3 = new Bill("Rafael Nazar", "Decoração", e1);
 
+        b1.getEventModel().getId();
+
         List<BillInstallment> list = new ArrayList<>();
         list.add(new BillInstallment(LocalDate.parse("2022-10-09"), (byte) 0, 1640.0, BillStatus.PAGO, b1));
-        list.add(new BillInstallment(LocalDate.parse("2022-10-10"), (byte) 1, 450.0, BillStatus.A_PAGAR, b1));
+        list.add(new BillInstallment(LocalDate.parse("2022-10-10"), (byte) 1, 450.0, BillStatus.PAGO, b1));
         list.add(new BillInstallment(LocalDate.parse("2022-10-11"), (byte) 2, 450.0, BillStatus.A_PAGAR, b1));
         list.add(new BillInstallment(LocalDate.parse("2022-10-12"), (byte) 3, 440.0, BillStatus.A_PAGAR, b1));
         b1.setInstallmentsList(list);

@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,10 +49,10 @@ public class BillService {
         return repository.findAll(pageable);
     }
 
-//    public BillInfo findInfo() {
-//        List<Bill> bills = repository.findAll();
-//        return new BillInfo(bills);
-//    }
+    public BillInfo findInfo() {
+        List<Bill> bills = new ArrayList<>(repository.findAll());
+        return new BillInfo(bills);
+    }
 
     public Optional<Bill> findById(Long id) {
         return repository.findById(id);

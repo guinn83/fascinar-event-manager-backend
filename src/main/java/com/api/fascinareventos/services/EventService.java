@@ -1,19 +1,26 @@
 package com.api.fascinareventos.services;
 
+import com.api.fascinareventos.dtos.BillInfo;
+import com.api.fascinareventos.dtos.EventInfo;
 import com.api.fascinareventos.models.EventModel;
 import com.api.fascinareventos.models.enums.EventStatus;
 import com.api.fascinareventos.repositories.EventRepository;
 import com.api.fascinareventos.services.exceptions.DatabaseException;
 import com.api.fascinareventos.services.exceptions.ResourceNotFoundException;
+import com.api.fascinareventos.utils.MyUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -50,8 +57,16 @@ public class EventService {
         return repository.findAll(pageable);
     }
 
-    public Page<EventModel> findAllInfo(Pageable pageable) {
-        return repository.findAll(pageable);
+    public Page<EventInfo> findAllInfo(Pageable pageable) {
+        List<EventModel> events = new ArrayList<>(repository.findAll());
+        List<EventInfo> eventInfos = new ArrayList<>();
+        for (EventModel e : events) {
+            EventInfo info = new EventInfo();
+            BeanUtils.copyProperties(e, info);
+            info.setBillInfo(new BillInfo(e.getBillList()));
+            eventInfos.add(info);
+        }
+        return new PageImpl<>(eventInfos, pageable, eventInfos.size());
     }
 
     public Optional<EventModel> findById(Long id) {

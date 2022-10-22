@@ -2,20 +2,25 @@ package com.api.fascinareventos.dtos;
 
 import com.api.fascinareventos.models.Bill;
 import com.api.fascinareventos.models.enums.BillStatus;
+import com.api.fascinareventos.models.views.View;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
-import static com.api.fascinareventos.utils.MathUtil.RoundDecimal;
+import static com.api.fascinareventos.utils.MyUtils.RoundDecimal;
 
 @Data
 public class BillInfo {
 
+    @JsonIgnore
     @NotBlank
     private List<Bill> billList;
 
+    @JsonView(View.Summary.class)
     private Bill nextBill;
 
     public BillInfo(List<Bill> billList) {
@@ -25,37 +30,35 @@ public class BillInfo {
         }
     }
 
+    @JsonView(View.Summary.class)
     public Double getTotalValue() {
         return billList.stream()
                 .mapToDouble(Bill::getTotalValue)
                 .sum();
     }
 
+    @JsonView(View.Summary.class)
     public Double getTotalNotPaid() {
         return billList.stream()
                 .filter(b -> b.getStatus() != BillStatus.PAGO)
-                .mapToDouble(Bill::getTotalValue)
+                .mapToDouble(Bill::getTotalNotPaid)
                 .sum();
     }
 
+    @JsonView(View.Summary.class)
     public Double getTotalPayed() {
         return getTotalValue() - getTotalNotPaid();
     }
 
+    @JsonView(View.Summary.class)
     public Double getPayedPercent() {
         return RoundDecimal(getTotalPayed() / getTotalValue() * 100.0, 1);
     }
 
     public void setNextBill() {
-        LocalDate date = LocalDate.now();
-        int diff = 10000;
-        for (Bill b : billList) {
-            if (b.getStatus() != BillStatus.PAGO) {
-                if (b.getNextDate().compareTo(date) < diff) {
-                    diff = b.getNextDate().compareTo(date);
-                    nextBill = b;
-                }
-            }
-        }
+        nextBill = billList.stream()
+                .filter(b -> b.getNextDate() != null)
+                .min(Comparator.comparing(Bill::getNextDate))
+                .orElse(null);
     }
 }

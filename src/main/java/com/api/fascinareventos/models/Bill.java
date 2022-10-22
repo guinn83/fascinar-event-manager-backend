@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.api.fascinareventos.utils.MathUtil.RoundDecimal;
-import static com.api.fascinareventos.utils.MathUtil.RoundMultiple;
+import static com.api.fascinareventos.utils.MyUtils.RoundDecimal;
+import static com.api.fascinareventos.utils.MyUtils.RoundMultiple;
 import static com.api.fascinareventos.utils.enums.RoundOption.DISABLE;
 
 
@@ -41,9 +41,9 @@ public class Bill implements Serializable{
     @JsonView(View.Full.class)
     private Long id;
     @Column(name = "supplier", nullable = false)
-    @JsonView(View.Base.class)
+    @JsonView(View.Summary.class)
     private String supplier;
-    @JsonView(View.Base.class)
+    @JsonView(View.Summary.class)
     private String description;
 
     @JsonIgnore
@@ -56,11 +56,11 @@ public class Bill implements Serializable{
 
     @Transient
     private BillInstallment nextInstallment;
-    @JsonView(View.Base.class)
+    @JsonView(View.Summary.class)
     private BillStatus status;
-    @JsonView(View.Base.class)
+    @JsonView(View.Summary.class)
     private LocalDate nextDate;
-    @JsonView(View.Base.class)
+    @JsonView(View.Summary.class)
     private Double nextInstallmentValue;
 
     public Bill(String supplier, String description, EventModel eventModel) {

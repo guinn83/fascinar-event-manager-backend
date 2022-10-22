@@ -1,6 +1,7 @@
 package com.api.fascinareventos.controllers;
 
 import com.api.fascinareventos.dtos.EventDTO;
+import com.api.fascinareventos.dtos.EventInfo;
 import com.api.fascinareventos.models.EventModel;
 import com.api.fascinareventos.models.views.View;
 import com.api.fascinareventos.services.EventService;
@@ -22,6 +23,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -45,6 +48,18 @@ public class EventController {
                     direction = Sort.Direction.DESC)
             Pageable pageable) {
         return ResponseEntity.ok().body(service.findAll(pageable));
+    }
+
+    @GetMapping("/info")
+    @JsonView(View.Summary.class)
+    public ResponseEntity<Page<EventInfo>> getEventsSummary(
+            @PageableDefault(
+                    page = 0,
+                    size = 10,
+                    sort = "eventDate",
+                    direction = Sort.Direction.DESC)
+            Pageable pageable) {
+        return ResponseEntity.ok().body(service.findAllInfo(pageable));
     }
 
     @GetMapping("/{id}")

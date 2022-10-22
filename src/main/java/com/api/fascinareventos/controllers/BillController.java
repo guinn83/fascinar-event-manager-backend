@@ -5,11 +5,13 @@ import com.api.fascinareventos.dtos.BillDTO;
 import com.api.fascinareventos.dtos.BillInfo;
 import com.api.fascinareventos.models.Bill;
 import com.api.fascinareventos.models.EventModel;
+import com.api.fascinareventos.models.views.View;
 import com.api.fascinareventos.services.BillService;
 import com.api.fascinareventos.services.EventService;
 import com.api.fascinareventos.services.exceptions.DatabaseException;
 import com.api.fascinareventos.services.exceptions.ResourceNotFoundException;
 import com.api.fascinareventos.utils.enums.RoundOption;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONException;
@@ -52,10 +54,11 @@ public class BillController {
         return ResponseEntity.ok().body(service.findAll(pageable));
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<BillInfo> getInfo(@PathVariable(value = "id") Long id) {
-//        return ResponseEntity.ok().body(service.findInfo());
-//    }
+    @GetMapping("/info")
+    @JsonView(View.Summary.class)
+    public ResponseEntity<BillInfo> getInfo() {
+        return ResponseEntity.ok().body(service.findInfo());
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable(value = "id") Long id) {
