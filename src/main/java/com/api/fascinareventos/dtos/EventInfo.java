@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 public class EventInfo {
 
     @JsonView(View.Summary.class)
+    private Long id;
+    @JsonView(View.Summary.class)
     private URL avatar;
     @NotBlank
     @JsonView(View.Summary.class)

@@ -7,11 +7,8 @@ import com.api.fascinareventos.models.views.View;
 import com.api.fascinareventos.services.EventService;
 import com.api.fascinareventos.services.exceptions.ResourceNotFoundException;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -23,8 +20,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @RestController

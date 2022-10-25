@@ -85,7 +85,7 @@ public class BillController {
     }
 
     @PatchMapping("/{id}/calcInstallment")
-    public ResponseEntity<?> createBillInstallments(@PathVariable(name = "id") Long id, @RequestBody BillCalcInstallmentDTO obj) throws JSONException {
+    public ResponseEntity<?> createBillInstallments(@PathVariable(name = "id") Long id, @RequestBody BillCalcInstallmentDTO obj) {
         Optional<Bill> bill = service.findById(id);
         if (bill.isEmpty()) {
             throw new ResourceNotFoundException(id, NOT_FOUND);
