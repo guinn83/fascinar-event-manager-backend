@@ -2,13 +2,10 @@ package com.api.fascinareventos.security;
 
 import com.api.fascinareventos.config.JwtProperties;
 import com.api.fascinareventos.controllers.exceptions.ResponseError;
-import com.api.fascinareventos.security.exceptions.WebSecurityException;
 import com.api.fascinareventos.services.UserService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;

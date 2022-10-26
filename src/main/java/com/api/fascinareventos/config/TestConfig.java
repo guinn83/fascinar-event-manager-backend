@@ -38,7 +38,7 @@ public class TestConfig implements CommandLineRunner {
         User u3 = new User("moniky", encoder.encode("123456"), UserRole.ASSISTANT, false, true);
         User u4 = new User("vanessa", encoder.encode("123456"), UserRole.ASSISTANT, false, true);
         User u5 = new User("michele", encoder.encode("123456"), UserRole.CUSTOMER, false, true);
-        userRepository.saveAll(Arrays.asList(u1, u2, u3, u4));
+        userRepository.saveAll(Arrays.asList(u1, u2, u3, u4, u5));
 
         TeamRoles tr1 = new TeamRoles("Cerimonialista");
         TeamRoles tr2 = new TeamRoles("Coordenador");

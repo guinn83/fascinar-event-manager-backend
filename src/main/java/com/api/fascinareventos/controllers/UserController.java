@@ -2,6 +2,7 @@ package com.api.fascinareventos.controllers;
 
 import com.api.fascinareventos.models.User;
 import com.api.fascinareventos.repositories.UserRepository;
+import com.api.fascinareventos.security.JWTAuthorityAnotation;
 import com.api.fascinareventos.services.UserService;
 import com.api.fascinareventos.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/user")
-@PreAuthorize("hasAuthority('ADMIN')")
+@JWTAuthorityAnotation.hasAdminAuthority
 @CrossOrigin
 public class UserController {
 

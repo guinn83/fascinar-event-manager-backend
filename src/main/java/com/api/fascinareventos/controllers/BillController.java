@@ -6,6 +6,7 @@ import com.api.fascinareventos.dtos.BillInfo;
 import com.api.fascinareventos.models.Bill;
 import com.api.fascinareventos.models.EventModel;
 import com.api.fascinareventos.models.views.View;
+import com.api.fascinareventos.security.JWTAuthorityAnotation;
 import com.api.fascinareventos.services.BillService;
 import com.api.fascinareventos.services.EventService;
 import com.api.fascinareventos.services.exceptions.DatabaseException;
@@ -14,14 +15,12 @@ import com.api.fascinareventos.utils.enums.RoundOption;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -33,7 +32,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/bill")
 @CrossOrigin("*")
-@PreAuthorize("hasAuthority('ADMIN')")
+@JWTAuthorityAnotation.hasCustomerAuthority
 public class BillController {
 
     @Autowired

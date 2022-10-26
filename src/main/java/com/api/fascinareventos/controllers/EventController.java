@@ -4,6 +4,7 @@ import com.api.fascinareventos.dtos.EventDTO;
 import com.api.fascinareventos.dtos.EventInfo;
 import com.api.fascinareventos.models.EventModel;
 import com.api.fascinareventos.models.views.View;
+import com.api.fascinareventos.security.JWTAuthorityAnotation;
 import com.api.fascinareventos.services.EventService;
 import com.api.fascinareventos.services.exceptions.ResourceNotFoundException;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -14,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -25,7 +25,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/event")
 @CrossOrigin("*")
-@PreAuthorize("hasAuthority('ADMIN')")
 public class EventController {
 
     @Autowired
@@ -35,6 +34,7 @@ public class EventController {
 
     @GetMapping
     @JsonView(View.Base.class)
+    @JWTAuthorityAnotation.hasPlannerAuthority
     public ResponseEntity<Page<EventModel>> getFullEvents(
             @PageableDefault(
                     page = 0,
@@ -47,6 +47,7 @@ public class EventController {
 
     @GetMapping("/info")
     @JsonView(View.Summary.class)
+    @JWTAuthorityAnotation.hasTeamAuthority
     public ResponseEntity<Page<EventInfo>> getEventsSummary(
             @PageableDefault(
                     page = 0,
@@ -59,6 +60,7 @@ public class EventController {
 
     @GetMapping("/{id}")
     @JsonView(View.Base.class)
+    @JWTAuthorityAnotation.hasCustomerAuthority
     public ResponseEntity<?> getById(@PathVariable(value = "id") Long id) {
         Optional<EventModel> obj = service.findById(id);
         if (obj.isEmpty()) {
@@ -68,6 +70,7 @@ public class EventController {
     }
 
     @PostMapping
+    @JWTAuthorityAnotation.hasPlannerAuthority
     public ResponseEntity<?> createEvent(@RequestBody @Valid EventDTO eventDTO) {
         EventModel obj = new EventModel();
         BeanUtils.copyProperties(eventDTO, obj);
@@ -77,11 +80,13 @@ public class EventController {
     }
 
     @PutMapping("/{id}")
+    @JWTAuthorityAnotation.hasPlannerAuthority
     public ResponseEntity<?> updateEvent(@PathVariable(name = "id") Long id, @RequestBody @Valid EventModel eventModel) {
         return ResponseEntity.ok().body(service.updateEvent(id, eventModel));
     }
 
     @DeleteMapping("/{id}")
+    @JWTAuthorityAnotation.hasPlannerAuthority
     public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
         service.deleteEvent(id);
         return ResponseEntity.ok().build();

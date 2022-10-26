@@ -8,13 +8,11 @@ import com.api.fascinareventos.services.UserService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -24,8 +22,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.ParseException;
-import java.time.Instant;
 import java.util.Date;
 
 public class JWTAuthFilter extends UsernamePasswordAuthenticationFilter {
@@ -53,7 +49,6 @@ public class JWTAuthFilter extends UsernamePasswordAuthenticationFilter {
                     user.getPassword(),
                     userDetails.getAuthorities()));
         } catch (UsernameNotFoundException e) {
-//            throw new UsernameNotFoundException(e.getMessage());
             throw new WebSecurityException(HttpStatus.NOT_FOUND, "Unauthorized: User not found");
         } catch (IOException | RuntimeException e) {
             throw new WebSecurityException(HttpStatus.UNAUTHORIZED, "Fail to authenticate user " + obtainUsername(request));
@@ -62,13 +57,7 @@ public class JWTAuthFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
-        //response.setStatus(401);
-//        String errorMessage = ExceptionUtils.getMessage(e);
         ResponseError.sendError(response, request, 401, "Authentication error", e);
-//        sendError(response, request, 401, "Authentication error", e);
-        //getFailureHandler().onAuthenticationFailure(request, response, e);
-        //response.getWriter().write(e.getMessage());
-        //response.getWriter().flush();
     }
 
     @Override

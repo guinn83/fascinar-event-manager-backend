@@ -1,12 +1,12 @@
 package com.api.fascinareventos.controllers;
 
 import com.api.fascinareventos.models.BillInstallment;
+import com.api.fascinareventos.security.JWTAuthorityAnotation;
 import com.api.fascinareventos.services.BillInstallmentService;
 import com.api.fascinareventos.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -18,7 +18,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/billinstallment")
 @CrossOrigin("*")
-@PreAuthorize("hasAuthority('ADMIN')")
+@JWTAuthorityAnotation.hasCustomerAuthority
 public class BillInstallmentController {
 
     @Autowired
